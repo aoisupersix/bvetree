@@ -15,5 +15,11 @@
   "bugs": {
     "url": "https://github.com/aoisupersix/bve5-parser-ts/issues"
   },
-  "homepage": "https://github.com/aoisupersix/bve5-parser-ts#readme"
+  "homepage": "https://github.com/aoisupersix/bve5-parser-ts#readme",
+  "dependencies": {
+    "typescript": "^3.9.5"
+  },
+  "devDependencies": {
+    "ts-node": "^8.10.2"
+  }
 }

@@ -1,0 +1,19 @@
+{
+  "name": "bve5-parser-ts",
+  "version": "0.0.1",
+  "description": "Typescript parsing library for BveTrainsim 5",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aoisupersix/bve5-parser-ts.git"
+  },
+  "author": "aoisupersix",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/aoisupersix/bve5-parser-ts/issues"
+  },
+  "homepage": "https://github.com/aoisupersix/bve5-parser-ts#readme"
+}

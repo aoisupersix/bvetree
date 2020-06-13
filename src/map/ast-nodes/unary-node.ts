@@ -2,18 +2,18 @@ import { MapAstNode } from './map-ast-node'
 import { Position } from '#/position'
 
 /**
- * Map AST node showing string literal
+ * Map AST node showing unary operation
  */
-export class StringNode extends MapAstNode {
-  get value(): string {
-    return this._value
+export class UnaryNode extends MapAstNode {
+  get innerValue(): string {
+    return this._innerValue
   }
 
   constructor(
     start: Position,
     end: Position,
     text: string,
-    private readonly _value: string
+    private readonly _innerValue: string
   ) {
     super(start, end, text)
   }

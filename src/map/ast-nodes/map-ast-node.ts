@@ -1,15 +1,15 @@
-import { Token } from '#/token'
+import { Position } from '#/position'
 
 /**
  * Map parser base ast node.
  * All ast nodes inherit this class.
  */
 export abstract class MapAstNode {
-  get start(): Token {
+  get start(): Position {
     return this._start
   }
 
-  get end(): Token | undefined {
+  get end(): Position {
     return this._end
   }
 
@@ -18,8 +18,8 @@ export abstract class MapAstNode {
   }
 
   constructor(
-    private _start: Token,
-    private _end: Token | undefined,
-    private _text: string
+    private readonly _start: Position,
+    private readonly _end: Position,
+    private readonly _text: string
   ) {}
 }

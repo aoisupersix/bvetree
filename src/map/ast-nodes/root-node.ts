@@ -1,8 +1,8 @@
-import { Token } from '#token'
+import { Position } from '#/position'
 import { MapAstNode } from './map-ast-node'
 
 export class RootNode extends MapAstNode {
-  constructor(start: Token, end: Token | undefined, text: string) {
+  constructor(start: Position, end: Position, text: string) {
     super(start, end, text)
   }
 }

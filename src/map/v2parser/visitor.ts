@@ -10,6 +10,7 @@ import { VarAssignStatementNode } from '../ast-nodes/var-assign-statement-node'
 import { VarNode } from '../ast-nodes/var-node'
 import { ExpressionNode } from '../ast-nodes/expression-node'
 import { DistanceStatementNode } from '../ast-nodes/distance-statement-node'
+import { NumberNode } from '../ast-nodes/number-node'
 
 type NullableAstNode = MapAstNode | null
 
@@ -97,6 +98,15 @@ export class Visitor extends AbstractParseTreeVisitor<NullableAstNode>
       this.getEndPosition(ctx),
       ctx.text,
       ctx._v.text
+    )
+  }
+
+  visitNumberExpr(ctx: parser.NumberExprContext): NullableAstNode {
+    return new NumberNode(
+      this.getStartPosition(ctx),
+      this.getEndPosition(ctx),
+      ctx.text,
+      ctx.NUM().text
     )
   }
 }

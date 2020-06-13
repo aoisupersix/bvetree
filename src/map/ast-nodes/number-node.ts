@@ -1,12 +1,11 @@
 import { MapAstNode } from './map-ast-node'
-import { ExpressionNode } from './expression-node'
 import { Position } from '#/position'
 
 /**
- * Map AST node showing a distance statement
+ * Map AST node showing a numerical term
  */
-export class DistanceStatementNode extends MapAstNode {
-  get value(): ExpressionNode {
+export class NumberNode extends MapAstNode {
+  get value(): string {
     return this._value
   }
 
@@ -14,7 +13,7 @@ export class DistanceStatementNode extends MapAstNode {
     start: Position,
     end: Position,
     text: string,
-    private _value: ExpressionNode
+    private readonly _value: string
   ) {
     super(start, end, text)
   }

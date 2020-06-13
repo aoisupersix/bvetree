@@ -3,7 +3,7 @@ import { Position } from '#/position'
 import { MapAstNode } from './map-ast-node'
 
 export class RootNode extends MapAstNode {
-  private _statements: StatementNode[]
+  private _statements: StatementNode[] = []
 
   get statements(): StatementNode[] {
     return this._statements

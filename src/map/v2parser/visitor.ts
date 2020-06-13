@@ -5,6 +5,11 @@ import { MapParserVisitor } from './gen/MapParserVisitor'
 import { RootNode } from '#/map/ast-nodes/root-node'
 import { Position } from '#/position'
 import { ParserRuleContext } from 'antlr4ts'
+import { StatementNode } from '../ast-nodes/statement-node'
+import { VarAssignStatementNode } from '../ast-nodes/var-assign-statement-node'
+import { VarNode } from '../ast-nodes/var-node'
+import { ExpressionNode } from '../ast-nodes/expression-node'
+import { DistanceStatementNode } from '../ast-nodes/distance-statement-node'
 
 type NullableAstNode = MapAstNode | null
 
@@ -41,6 +46,57 @@ export class Visitor extends AbstractParseTreeVisitor<NullableAstNode>
       ctx.text
     )
 
+    for (const statementCtx of ctx.statement()) {
+      const statement = this.visit(statementCtx) as StatementNode
+      if (statement !== null) {
+        node.addStatement(statement)
+      }
+    }
+
     return node
+  }
+
+  visitDistanceStatement(
+    ctx: parser.DistanceStatementContext
+  ): NullableAstNode {
+    const value = this.visit(ctx.expr()) as ExpressionNode
+    if (value === null) {
+      // TODO: exception handling
+      return null
+    }
+
+    return new DistanceStatementNode(
+      this.getStartPosition(ctx),
+      this.getEndPosition(ctx),
+      ctx.text,
+      value
+    )
+  }
+
+  visitVarAssignStatement(
+    ctx: parser.VarAssignStatementContext
+  ): NullableAstNode {
+    const value = this.visit(ctx.expr()) as ExpressionNode
+    if (value === null) {
+      // TODO: exception handling
+      return null
+    }
+
+    return new VarAssignStatementNode(
+      this.getStartPosition(ctx),
+      this.getEndPosition(ctx),
+      ctx.text,
+      ctx._v.text,
+      value
+    )
+  }
+
+  visitVarExpr(ctx: parser.VarExprContext): NullableAstNode {
+    return new VarNode(
+      this.getStartPosition(ctx),
+      this.getEndPosition(ctx),
+      ctx.text,
+      ctx._v.text
+    )
   }
 }

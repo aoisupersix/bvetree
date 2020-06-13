@@ -10,7 +10,7 @@ root :
 
 statement :
 	  expr STATE_END                                                                          #distanceStatement
-	| VAR_START var EQUAL expr STATE_END                                                      #varAssignStatement
+	| VAR_START v=var EQUAL expr STATE_END                                                      #varAssignStatement
 	| element DOT function OPN_PAR args CLS_PAR STATE_END                                     #normalStatement
 	| element OPN_BRA expr CLS_BRA DOT function OPN_PAR args CLS_PAR STATE_END				        #keyStatement
 	| element OPN_BRA expr CLS_BRA DOT subelement DOT function OPN_PAR args CLS_PAR STATE_END #keyWithSubelementStatement

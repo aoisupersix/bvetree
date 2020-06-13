@@ -2,7 +2,7 @@ import { ANTLRInputStream, CommonTokenStream } from 'antlr4ts'
 import { MapLexer } from './gen/MapLexer'
 import { MapParser } from './gen/MapParser'
 import { Visitor } from './visitor'
-import { MapAstNode } from '#map/ast-nodes/map-ast-node'
+import { MapAstNode } from '#/map/ast-nodes/map-ast-node'
 
 export class MapV2Parser {
   parse(input: string): MapAstNode | null {

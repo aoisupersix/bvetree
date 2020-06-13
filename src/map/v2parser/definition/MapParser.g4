@@ -4,15 +4,15 @@ options{
 }
 
 root :
-	BVETS MAP version=NUM encoding? statement* EOF
+	statement* EOF
 	;
 
 
 statement :
-	  expr STATE_END #distanceStatement
-	| VAR_START var EQUAL expr STATE_END #varAssignStatement
-	| element DOT function OPN_PAR args CLS_PAR STATE_END #normalStatement
-	| element OPN_BRA expr CLS_BRA DOT function OPN_PAR args CLS_PAR STATE_END				  #keyStatement
+	  expr STATE_END                                                                          #distanceStatement
+	| VAR_START var EQUAL expr STATE_END                                                      #varAssignStatement
+	| element DOT function OPN_PAR args CLS_PAR STATE_END                                     #normalStatement
+	| element OPN_BRA expr CLS_BRA DOT function OPN_PAR args CLS_PAR STATE_END				        #keyStatement
 	| element OPN_BRA expr CLS_BRA DOT subelement DOT function OPN_PAR args CLS_PAR STATE_END #keyWithSubelementStatement
 	;
 
@@ -123,14 +123,6 @@ string returns [string | undefined value]:
 
 string_text :
 	CHAR*
-	;
-
-encoding returns [string | undefined value]:
-	SELECT_ENCODE v=encode_string ENCODE_END? {$value = $v.text; }
-	;
-
-encode_string :
-	ENCODE_CHAR*
 	;
 
 error_tokens :

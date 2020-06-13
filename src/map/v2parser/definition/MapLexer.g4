@@ -1,10 +1,5 @@
 lexer grammar MapLexer;
 
-//ヘッダー
-BVETS : B V E T S;
-MAP : M A P;
-SELECT_ENCODE : ':' -> pushMode(ENCODING_MODE);
-
 //インクルードディレクティブ
 INCLUDE : I N C L U D E;
 

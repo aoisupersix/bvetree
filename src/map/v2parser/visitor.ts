@@ -14,24 +14,10 @@ export class Visitor extends AbstractParseTreeVisitor<NullableAstNode>
   }
 
   visitRoot(ctx: parser.RootContext): NullableAstNode {
-    const encodingCtx = ctx.encoding()
-    let encoding: Token | undefined = undefined
-    if (encodingCtx !== undefined) {
-      const value = encodingCtx._v
-      encoding = new Token(
-        value.start.line,
-        value.start.charPositionInLine,
-        value.start.startIndex,
-        value.stop?.stopIndex ?? value.start.stopIndex,
-        encodingCtx.text
-      )
-    }
     const node = new RootNode(
       Token.fromIToken(ctx.start),
       Token.fromITokenOrUndefined(ctx.stop),
-      ctx.text,
-      Token.fromIToken(ctx._version),
-      encoding
+      ctx.text
     )
 
     return node

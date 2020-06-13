@@ -77,3 +77,7 @@ tests/cases/user/*/**/*.d.ts
 tests/baselines/reference/dt
 .failed-tests
 TEST-results.xml
+
+# antlr generated files
+.antlr
+src/map/v2parser/gen

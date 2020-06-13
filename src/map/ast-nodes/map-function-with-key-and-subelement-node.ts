@@ -1,5 +1,5 @@
 import { ExpressionNode } from './expression-node'
-import { MapFunctionWithKeyNode } from './map-funtion-with-key-node'
+import { MapFunctionWithKeyNode } from './map-function-with-key-node'
 import { Position } from '#/position'
 
 /**

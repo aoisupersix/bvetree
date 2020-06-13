@@ -1,5 +1,4 @@
-import { MapAstNode } from './map-ast-node'
-import { ExpressionNode } from './expression-node'
+import { ExpressionNode, MapAstNode } from '.'
 
 /**
  * Map AST node indicates a syntax that has an argument

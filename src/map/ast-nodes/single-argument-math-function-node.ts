@@ -1,6 +1,5 @@
-import { MapAstNode } from './map-ast-node'
+import { ExpressionNode, MapAstNode } from '.'
 import { Position } from '#/position'
-import { ExpressionNode } from './expression-node'
 
 /**
  * Map AST node indicating a mathematical function that takes one argument

@@ -1,6 +1,5 @@
-import { MapFunctionWithKeyNode } from './map-funtion-with-key-node'
+import { ExpressionNode, MapFunctionWithKeyNode } from '.'
 import { Position } from '#/position'
-import { ExpressionNode } from './expression-node'
 
 /**
  * Map Ast node indicating the map syntax with the map element, subelement, key, function name, and argument

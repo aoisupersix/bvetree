@@ -1,7 +1,5 @@
 import { MapV2Parser } from '#/map/v2parser/map-v2-parser'
-import { RootNode } from '#/map/ast-nodes/root-node'
-import { DistanceStatementNode } from '#/map/ast-nodes/distance-statement-node'
-import { NumberNode } from '#/map/ast-nodes/number-node'
+import { DistanceStatementNode, NumberNode, RootNode } from '#/map/ast-nodes'
 
 describe('MapV2Parser', () => {
   describe('#parse', () => {

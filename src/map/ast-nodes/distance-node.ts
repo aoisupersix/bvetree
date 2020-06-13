@@ -1,4 +1,4 @@
-import { MapAstNode } from './map-ast-node'
+import { MapAstNode } from '.'
 
 /**
  * Map AST node showing distance variable

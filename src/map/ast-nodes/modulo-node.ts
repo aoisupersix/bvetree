@@ -1,4 +1,4 @@
-import { InfixExpressionNode } from './infix-expression-node'
+import { InfixExpressionNode } from '.'
 
 /**
  * Map AST node showing modulo

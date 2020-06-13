@@ -1,5 +1,4 @@
-import { MapAstNode } from './map-ast-node'
-import { ExpressionNode } from './expression-node'
+import { ExpressionNode, MapAstNode } from '.'
 import { Position } from '#/position'
 
 /**

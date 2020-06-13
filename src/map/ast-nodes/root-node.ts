@@ -1,6 +1,5 @@
-import { StatementNode } from './statement-node'
+import { MapAstNode, StatementNode } from '.'
 import { Position } from '#/position'
-import { MapAstNode } from './map-ast-node'
 
 export class RootNode extends MapAstNode {
   private _statements: StatementNode[] = []

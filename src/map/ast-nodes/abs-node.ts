@@ -1,4 +1,4 @@
-import { SingleArgumentMathFunctionNode } from './single-argument-math-function-node'
+import { SingleArgumentMathFunctionNode } from '.'
 
 /**
  * Map AST node showing abs() function

@@ -1,6 +1,5 @@
-import { MapAstNode } from './map-ast-node'
+import { MapAstNode, ExpressionNode } from '.'
 import { Position } from '#/position'
-import { ExpressionNode } from './expression-node'
 
 /**
  * Map AST node showing infix expression

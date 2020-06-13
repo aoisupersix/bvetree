@@ -1,4 +1,4 @@
-import { SingleArgumentMathFunctionNode } from '.'
+import { SingleArgumentMathFunctionNode } from './single-argument-math-function-node'
 
 /**
  * Map AST node showing sin() function

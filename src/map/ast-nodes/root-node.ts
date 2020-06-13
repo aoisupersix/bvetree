@@ -1,4 +1,5 @@
-import { MapAstNode, StatementNode } from '.'
+import { MapAstNode } from './map-ast-node'
+import { StatementNode } from './statement-node'
 import { Position } from '#/position'
 
 export class RootNode extends MapAstNode {

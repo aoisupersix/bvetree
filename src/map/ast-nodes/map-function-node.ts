@@ -1,4 +1,4 @@
-import { SyntaxWithArgumentsNode } from '.'
+import { SyntaxWithArgumentsNode } from './syntax-with-arguments-node'
 import { Position } from '#/position'
 
 /**

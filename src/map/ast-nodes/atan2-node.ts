@@ -1,4 +1,4 @@
-import { MapAstNode } from '.'
+import { MapAstNode } from './map-ast-node'
 import { Position } from '#/position'
 
 /**

@@ -7,6 +7,10 @@ import { NodeType } from './node-type'
  * Map Ast node indicating the map syntax with the map element, subelement, key, function name, and argument
  */
 export class MapFunctionWithKeyAndSubelementNode extends MapFunctionWithKeyNode {
+  get type(): NodeType {
+    return NodeType.MapFunctionWithKeyAndSubelement
+  }
+
   /**
    * Map subelement name.
    * This property returns the element name exactly as input. That is, case insensitive.

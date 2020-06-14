@@ -5,7 +5,7 @@ import { MapParserVisitor } from './gen/MapParserVisitor'
 import { MapLexer } from './gen/MapLexer'
 import * as ast from '#/map/ast-nodes'
 import { Position } from '#/position'
-import { isExpressionNode } from '#/map/ast-nodes'
+import { isExpressionNode, isStatementNode } from '#/map/ast-nodes'
 
 type NullableAstNode = ast.MapAstNode | null
 
@@ -43,8 +43,8 @@ export class Visitor extends AbstractParseTreeVisitor<NullableAstNode>
     )
 
     for (const statementCtx of ctx.statement()) {
-      const statement = this.visit(statementCtx) as ast.StatementNode
-      if (statement !== null) {
+      const statement = this.visit(statementCtx)
+      if (isStatementNode(statement)) {
         node.addStatement(statement)
       }
     }

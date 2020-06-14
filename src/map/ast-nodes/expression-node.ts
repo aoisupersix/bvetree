@@ -19,6 +19,8 @@ import { StringNode } from './string-node'
 import { SubtractionNode } from './subtraction-node'
 import { UnaryNode } from './unary-node'
 import { VarNode } from './var-node'
+import { MapAstNode } from './map-ast-node'
+import { NodeType } from './node-type'
 
 /**
  * Map AST node showing a formula
@@ -45,3 +47,36 @@ export type ExpressionNode =
   | SubtractionNode
   | UnaryNode
   | VarNode
+
+const expressionNodeTypes: NodeType[] = [
+  NodeType.Abs,
+  NodeType.Addition,
+  NodeType.Atan2,
+  NodeType.Ceil,
+  NodeType.Cos,
+  NodeType.Distance,
+  NodeType.Division,
+  NodeType.Exp,
+  NodeType.Floor,
+  NodeType.Log,
+  NodeType.Modulo,
+  NodeType.Multiplication,
+  NodeType.Number,
+  NodeType.Pow,
+  NodeType.Rand,
+  NodeType.Sin,
+  NodeType.Sqrt,
+  NodeType.String,
+  NodeType.Subtraction,
+  NodeType.Unary,
+  NodeType.Var,
+]
+
+/**
+ * Type guard of ExpressionNode
+ * @param node Ast node or null | undefined
+ */
+export const isExpressionNode = (
+  node: MapAstNode | null | undefined
+): node is ExpressionNode =>
+  node !== null && node !== undefined && expressionNodeTypes.includes(node.type)

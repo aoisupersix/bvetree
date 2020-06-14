@@ -1,10 +1,15 @@
 import { MapAstNode } from './map-ast-node'
 import { Position } from '#/position'
+import { NodeType } from './node-type'
 
 /**
  * Map AST node showing variable declaration
  */
 export class VarAssignStatementNode extends MapAstNode {
+  get type(): NodeType {
+    return NodeType.VarAssignStatement
+  }
+
   get varName(): string {
     return this._varName
   }

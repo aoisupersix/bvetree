@@ -1,6 +1,12 @@
-import { RootNode, isRootNode } from '#/map/ast-nodes/root-node'
 import { MapV2Parser } from '#/map/v2parser/map-v2-parser'
-import { MapAstNode, StatementNode } from '#/map/ast-nodes'
+import {
+  ExpressionNode,
+  MapAstNode,
+  RootNode,
+  isRootNode,
+  StatementNode,
+  isDistanceStatementNode,
+} from '#/map/ast-nodes'
 
 /**
  * Execute MapV2Parser.parse() and return the return value as RootNode or null
@@ -26,6 +32,20 @@ export const execParseSingleStatement = (
   const root = execParse(input)
   if (root !== null && root.statements.length === 1) {
     return root.statements[0]
+  }
+
+  return null
+}
+
+/**
+ * Execute MapV2Parser.parse() as single distance statement and return the return value as DistanceStatementNode.value or null.
+ * Returns null if input contains multiple statements.
+ * @param input string to parse
+ */
+export const execParseExpression = (input: string): ExpressionNode | null => {
+  const statement = execParseSingleStatement(input)
+  if (isDistanceStatementNode(statement)) {
+    return statement.value
   }
 
   return null

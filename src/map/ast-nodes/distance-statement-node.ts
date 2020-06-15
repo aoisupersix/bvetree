@@ -24,3 +24,14 @@ export class DistanceStatementNode extends MapAstNode {
     super(start, end, text)
   }
 }
+
+/**
+ * Type guard of DistanceStatementNode
+ * @param node Ast node or null | undefined
+ */
+export const isDistanceStatementNode = (
+  node: MapAstNode | null | undefined
+): node is DistanceStatementNode =>
+  node !== null &&
+  node !== undefined &&
+  node.type === NodeType.DistanceStatement

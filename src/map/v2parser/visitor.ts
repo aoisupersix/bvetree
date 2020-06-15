@@ -31,7 +31,7 @@ export class Visitor extends AbstractParseTreeVisitor<NullableAstNode>
   private getEndPosition(ctx: ParserRuleContext): Position {
     return new Position(
       ctx.stop?.line ?? ctx.start.line,
-      ctx.stop?.charPositionInLine ?? ctx.start.line
+      ctx.stop?.stopIndex ?? ctx.start.stopIndex
     )
   }
 

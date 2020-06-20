@@ -310,7 +310,7 @@ export class Visitor extends AbstractParseTreeVisitor<NullableAstNode>
       this.getStartPosition(ctx),
       this.getEndPosition(ctx),
       ctx.text,
-      ctx._v.text
+      ctx._v.varName ?? ''
     )
   }
 

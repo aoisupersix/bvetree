@@ -90,7 +90,19 @@ export class Visitor extends AbstractParseTreeVisitor<NullableAstNode>
   // #region Expression
 
   visitParensExpr(ctx: parser.ParensExprContext): NullableAstNode {
-    return this.visit(ctx.expr())
+    const inner = this.visit(ctx.expr())
+    if (!isExpressionNode(inner)) {
+      throw new Error(
+        'The expression in the parens operation is empty or invalid.'
+      )
+    }
+
+    return new ast.ParensNode(
+      this.getStartPosition(ctx),
+      this.getEndPosition(ctx),
+      ctx.text,
+      inner
+    )
   }
 
   visitUnaryExpr(ctx: parser.UnaryExprContext): NullableAstNode {

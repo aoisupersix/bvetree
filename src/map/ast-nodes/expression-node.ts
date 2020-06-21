@@ -11,6 +11,7 @@ import { LogNode } from './log-node'
 import { ModuloNode } from './modulo-node'
 import { MultiplicationNode } from './multiplication-node'
 import { NumberNode } from './number-node'
+import { ParensNode } from './parens-node'
 import { PowNode } from './pow-node'
 import { RandNode } from './rand-node'
 import { SinNode } from './sin-node'
@@ -39,6 +40,7 @@ export type ExpressionNode =
   | ModuloNode
   | MultiplicationNode
   | NumberNode
+  | ParensNode
   | PowNode
   | RandNode
   | SinNode
@@ -62,6 +64,7 @@ const expressionNodeTypes: NodeType[] = [
   NodeType.Modulo,
   NodeType.Multiplication,
   NodeType.Number,
+  NodeType.Parens,
   NodeType.Pow,
   NodeType.Rand,
   NodeType.Sin,

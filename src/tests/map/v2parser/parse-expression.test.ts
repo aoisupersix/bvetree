@@ -4,12 +4,11 @@ import * as ast from '#/map/ast-nodes'
 describe('MapV2Parser', () => {
   describe('#parse_expressions', () => {
     it('parens', () => {
-      // In case of parens, return inner expression
-      const number = execParseExpression('(0);') as ast.NumberNode
-      expect(number).toBeTruthy()
-      expect(number.type).toBe(ast.NodeType.Number)
-      expect(number.value).toBe('0')
-      assertMapAstNode(number, 1, 1, 1, 1, '0')
+      const parens = execParseExpression('(0);') as ast.ParensNode
+      expect(parens).toBeTruthy()
+      expect(parens.type).toBe(ast.NodeType.Parens)
+      assertMapAstNode(parens, 1, 0, 1, 2, '(0)')
+      assertMapAstNode(parens.innerValue, 1, 1, 1, 1, '0')
     })
 
     it('unary', () => {

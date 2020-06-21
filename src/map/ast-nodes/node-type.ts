@@ -20,6 +20,7 @@ export enum NodeType {
   Modulo = 'Modulo',
   Multiplication = 'Multiplication',
   Number = 'Number',
+  Parens = 'Parens',
   Pow = 'Pow',
   Rand = 'Rand',
   Root = 'Root',

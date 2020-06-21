@@ -139,7 +139,9 @@ describe('MapV2Parser', () => {
       expect(rand).toBeTruthy()
       expect(rand.type).toBe(ast.NodeType.Rand)
       assertMapAstNode(rand, 1, 0, 1, 6, 'rand(0)')
-      assertMapAstNode(rand.value, 1, 5, 1, 5, '0')
+      expect(rand.value).toBeTruthy()
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      assertMapAstNode(rand.value!, 1, 5, 1, 5, '0')
     })
 
     it('empty argument rand', () => {

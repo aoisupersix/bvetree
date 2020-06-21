@@ -5,7 +5,7 @@ import { MapParserVisitor } from './gen/MapParserVisitor'
 import { MapLexer } from './gen/MapLexer'
 import * as ast from '#/map/ast-nodes'
 import { Position } from '#/position'
-import { isExpressionNode, isStatementNode } from '#/map/ast-nodes'
+import { isExpressionNode, isStatementNode, ExpressionNode } from '#/map/ast-nodes'
 
 type NullableAstNode = ast.MapAstNode | null
 
@@ -250,16 +250,19 @@ export class Visitor extends AbstractParseTreeVisitor<NullableAstNode>
   }
 
   visitRandExpr(ctx: parser.RandExprContext): NullableAstNode {
-    const value = this.visit(ctx._value)
-    if (!isExpressionNode(value)) {
-      throw new Error('The expression in the function is empty or invalid.')
+    let value: ExpressionNode | undefined = undefined
+    if (ctx._value) {
+      value = this.visit(ctx._value) as ExpressionNode
+      if (!isExpressionNode(value)) {
+        throw new Error('The expression in the function is invalid.')
+      }
     }
 
     return new ast.RandNode(
       this.getStartPosition(ctx),
       this.getEndPosition(ctx),
       ctx.text,
-      value
+      value ?? undefined
     )
   }
 

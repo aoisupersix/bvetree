@@ -160,6 +160,20 @@ export class Visitor extends AbstractParseTreeVisitor<NullableAstNode>
     return node
   }
 
+  visitAbsExpr(ctx: parser.AbsExprContext): NullableAstNode {
+    const value = this.visit(ctx._value)
+    if (!ast.isExpressionNode(value)) {
+      throw new Error('The expression in the function is empty or invalid.')
+    }
+
+    return new ast.AbsNode(
+      this.getStartPosition(ctx),
+      this.getEndPosition(ctx),
+      ctx.text,
+      value
+    )
+  }
+
   visitAtan2Expr(ctx: parser.Atan2ExprContext): NullableAstNode {
     const y = this.visit(ctx._y)
     const x = this.visit(ctx._x)
@@ -225,6 +239,20 @@ export class Visitor extends AbstractParseTreeVisitor<NullableAstNode>
     }
 
     return new ast.FloorNode(
+      this.getStartPosition(ctx),
+      this.getEndPosition(ctx),
+      ctx.text,
+      value
+    )
+  }
+
+  visitLogExpr(ctx: parser.LogExprContext): NullableAstNode {
+    const value = this.visit(ctx._value)
+    if (!ast.isExpressionNode(value)) {
+      throw new Error('The expression in the function is empty or invalid.')
+    }
+
+    return new ast.LogNode(
       this.getStartPosition(ctx),
       this.getEndPosition(ctx),
       ctx.text,

@@ -72,8 +72,8 @@ describe('MapV2Parser', () => {
       const abs = execParseExpression('abs(0);') as ast.AbsNode
       expect(abs).toBeTruthy()
       expect(abs.type).toBe(ast.NodeType.Abs)
-      assertMapAstNode(abs, 1, 0, 1, 6, 'abs(1)')
-      assertMapAstNode(abs.value, 1, 5, 1, 5, '1')
+      assertMapAstNode(abs, 1, 0, 1, 5, 'abs(0)')
+      assertMapAstNode(abs.value, 1, 4, 1, 4, '0')
     })
 
     it('atan2', () => {

@@ -56,8 +56,9 @@ export class Visitor extends AbstractParseTreeVisitor<NullableAstNode>
   ): NullableAstNode {
     const value = this.visit(ctx.expr())
     if (!ast.isExpressionNode(value)) {
-      // TODO: exception handling
-      return null
+      throw new Error(
+        'The expression in the distance statement is empty or invalid.'
+      )
     }
 
     return new ast.DistanceStatementNode(
@@ -73,8 +74,7 @@ export class Visitor extends AbstractParseTreeVisitor<NullableAstNode>
   ): NullableAstNode {
     const value = this.visit(ctx.expr())
     if (!ast.isExpressionNode(value)) {
-      // TODO: exception handling
-      return null
+      throw new Error('The expression in the var assign is empty or invalid.')
     }
 
     return new ast.VarAssignStatementNode(

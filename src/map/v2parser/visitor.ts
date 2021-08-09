@@ -8,8 +8,10 @@ import { Position } from '#/position'
 
 type NullableAstNode = ast.MapAstNode | null
 
-export class Visitor extends AbstractParseTreeVisitor<NullableAstNode>
-  implements MapParserVisitor<NullableAstNode> {
+export class Visitor
+  extends AbstractParseTreeVisitor<NullableAstNode>
+  implements MapParserVisitor<NullableAstNode>
+{
   protected defaultResult(): NullableAstNode {
     return null
   }

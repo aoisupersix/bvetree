@@ -7,6 +7,7 @@
     "postinstall": "npm run gen-v2map",
     "build": "tsc",
     "dev": "ts-node src/index.ts",
+    "lint": "eslint src",
     "test": "jest",
     "gen-v2map": "antlr4ts -Xexact-output-dir -o src/map/v2parser/gen -visitor src/map/v2parser/definition/MapParser.g4 src/map/v2parser/definition/MapLexer.g4"
   },

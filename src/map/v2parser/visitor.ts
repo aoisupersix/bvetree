@@ -21,7 +21,10 @@ export class Visitor
    * @param ctx Antlr rule context
    */
   private getStartPosition(ctx: ParserRuleContext): Position {
-    return new Position(ctx.start.line, ctx.start.charPositionInLine)
+    return {
+      line: ctx.start.line,
+      charPositionInLine: ctx.start.charPositionInLine,
+    }
   }
 
   /**
@@ -30,10 +33,10 @@ export class Visitor
    * @param ctx Antlr rule context
    */
   private getEndPosition(ctx: ParserRuleContext): Position {
-    return new Position(
-      ctx.stop?.line ?? ctx.start.line,
-      ctx.stop?.stopIndex ?? ctx.start.stopIndex
-    )
+    return {
+      line: ctx.stop?.line ?? ctx.start.line,
+      charPositionInLine: ctx.stop?.stopIndex ?? ctx.start.stopIndex,
+    }
   }
 
   visitRoot(ctx: parser.RootContext): NullableAstNode {

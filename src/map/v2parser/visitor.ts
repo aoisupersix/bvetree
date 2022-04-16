@@ -91,7 +91,7 @@ export class Visitor
     )
   }
 
-  visitNormalStatement(ctx: parser.NormalStatementContext): NullableAstNode {
+  visitSimpleStatement(ctx: parser.SimpleStatementContext): NullableAstNode {
     const node = new ast.MapFunctionNode(
       this.getStartPosition(ctx),
       this.getEndPosition(ctx),

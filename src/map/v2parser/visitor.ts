@@ -107,6 +107,30 @@ export class Visitor
     return node
   }
 
+  visitKeyStatement(ctx: parser.KeyStatementContext): NullableAstNode {
+    const key = this.visit(ctx.expr())
+    if (!ast.isExpressionNode(key)) {
+      throw new Error(
+        'The expression of map statement key is empty or invalid.'
+      )
+    }
+
+    const node = new ast.MapFunctionWithKeyNode(
+      this.getStartPosition(ctx),
+      this.getEndPosition(ctx),
+      ctx.text,
+      ctx.element().text.toLowerCase(),
+      ctx.function().text.toLowerCase(),
+      key
+    )
+
+    for (const argExpr of ctx.args().nullableExpr()) {
+      node.addArgument(this.visit(argExpr))
+    }
+
+    return node
+  }
+
   visitNullableExpr(ctx: parser.NullableExprContext): NullableAstNode {
     if (ctx._nullSyntax !== undefined) {
       return null

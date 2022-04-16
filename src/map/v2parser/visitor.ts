@@ -91,6 +91,34 @@ export class Visitor
     )
   }
 
+  visitNormalStatement(ctx: parser.NormalStatementContext): NullableAstNode {
+    const node = new ast.MapFunctionNode(
+      this.getStartPosition(ctx),
+      this.getEndPosition(ctx),
+      ctx.text,
+      ctx.element().text.toLowerCase(),
+      ctx.function().text.toLowerCase()
+    )
+
+    for (const argExpr of ctx.args().nullableExpr()) {
+      node.addArgument(this.visit(argExpr))
+    }
+
+    return node
+  }
+
+  visitNullableExpr(ctx: parser.NullableExprContext): NullableAstNode {
+    if (ctx._nullSyntax !== undefined) {
+      return null
+    }
+    const exprCtx = ctx.expr()
+    if (exprCtx === undefined) {
+      return null
+    }
+
+    return this.visit(exprCtx)
+  }
+
   // #region Expression
 
   visitParensExpr(ctx: parser.ParensExprContext): NullableAstNode {

@@ -1,6 +1,6 @@
-[![CI](https://github.com/aoisupersix/bve5-parser-ts/actions/workflows/ci.yml/badge.svg)](https://github.com/aoisupersix/bve5-parser-ts/actions/workflows/ci.yml)
-[![Coverage Status](https://coveralls.io/repos/github/aoisupersix/bve5-parser-ts/badge.svg?branch=master)](https://coveralls.io/github/aoisupersix/bve5-parser-ts?branch=master)
+[![CI](https://github.com/aoisupersix/bvetree/actions/workflows/ci.yml/badge.svg)](https://github.com/aoisupersix/bvetree/actions/workflows/ci.yml)
+[![Coverage Status](https://coveralls.io/repos/github/aoisupersix/bvetree/badge.svg?branch=master)](https://coveralls.io/github/aoisupersix/bvetree?branch=master)
 
-# bve5-parser-ts
+# bvetree
 
 In development.

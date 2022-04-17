@@ -1,3 +1,3 @@
 jest.config.js
 out/**/*
-src/map/v2parser/gen/*
+packages/bvetree-parser/src/map/v2parser/gen/*

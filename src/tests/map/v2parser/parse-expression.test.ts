@@ -7,8 +7,8 @@ describe('MapV2Parser', () => {
       const parens = execParseExpression('(0);') as ast.ParensNode
       expect(parens).toBeTruthy()
       expect(parens.type).toBe(ast.NodeType.Parens)
-      assertMapAstNode(parens, 1, 0, 1, 2, '(0)')
-      assertMapAstNode(parens.innerValue, 1, 1, 1, 1, '0')
+      assertMapAstNode(parens, 1, 0, 1, 3, '(0)')
+      assertMapAstNode(parens.innerValue, 1, 1, 1, 2, '0')
     })
 
     it('unary', () => {
@@ -18,25 +18,25 @@ describe('MapV2Parser', () => {
       expect(unary.innerValue).toBeTruthy()
       expect(unary.innerValue.type).toBe(ast.NodeType.Number)
       expect(unary.innerValue.text).toBe('4')
-      assertMapAstNode(unary, 1, 0, 1, 1, '-4')
+      assertMapAstNode(unary, 1, 0, 1, 2, '-4')
     })
 
     it('addition', () => {
       const addition = execParseExpression('1 + 1;') as ast.AdditionNode
       expect(addition).toBeTruthy()
       expect(addition.type).toBe(ast.NodeType.Addition)
-      assertMapAstNode(addition, 1, 0, 1, 4, '1+1')
-      assertMapAstNode(addition.left, 1, 0, 1, 0, '1')
-      assertMapAstNode(addition.right, 1, 4, 1, 4, '1')
+      assertMapAstNode(addition, 1, 0, 1, 5, '1 + 1')
+      assertMapAstNode(addition.left, 1, 0, 1, 1, '1')
+      assertMapAstNode(addition.right, 1, 4, 1, 5, '1')
     })
 
     it('subtraction', () => {
       const subtraction = execParseExpression('1 - 1;') as ast.SubtractionNode
       expect(subtraction).toBeTruthy()
       expect(subtraction.type).toBe(ast.NodeType.Subtraction)
-      assertMapAstNode(subtraction, 1, 0, 1, 4, '1-1')
-      assertMapAstNode(subtraction.left, 1, 0, 1, 0, '1')
-      assertMapAstNode(subtraction.right, 1, 4, 1, 4, '1')
+      assertMapAstNode(subtraction, 1, 0, 1, 5, '1 - 1')
+      assertMapAstNode(subtraction.left, 1, 0, 1, 1, '1')
+      assertMapAstNode(subtraction.right, 1, 4, 1, 5, '1')
     })
 
     it('multiplication', () => {
@@ -45,110 +45,110 @@ describe('MapV2Parser', () => {
       ) as ast.MultiplicationNode
       expect(multiplication).toBeTruthy()
       expect(multiplication.type).toBe(ast.NodeType.Multiplication)
-      assertMapAstNode(multiplication, 1, 0, 1, 4, '1*1')
-      assertMapAstNode(multiplication.left, 1, 0, 1, 0, '1')
-      assertMapAstNode(multiplication.right, 1, 4, 1, 4, '1')
+      assertMapAstNode(multiplication, 1, 0, 1, 5, '1 * 1')
+      assertMapAstNode(multiplication.left, 1, 0, 1, 1, '1')
+      assertMapAstNode(multiplication.right, 1, 4, 1, 5, '1')
     })
 
     it('division', () => {
       const division = execParseExpression('1 / 1;') as ast.DivisionNode
       expect(division).toBeTruthy()
       expect(division.type).toBe(ast.NodeType.Division)
-      assertMapAstNode(division, 1, 0, 1, 4, '1/1')
-      assertMapAstNode(division.left, 1, 0, 1, 0, '1')
-      assertMapAstNode(division.right, 1, 4, 1, 4, '1')
+      assertMapAstNode(division, 1, 0, 1, 5, '1 / 1')
+      assertMapAstNode(division.left, 1, 0, 1, 1, '1')
+      assertMapAstNode(division.right, 1, 4, 1, 5, '1')
     })
 
     it('modulo', () => {
       const modulo = execParseExpression('1 % 1;') as ast.ModuloNode
       expect(modulo).toBeTruthy()
       expect(modulo.type).toBe(ast.NodeType.Modulo)
-      assertMapAstNode(modulo, 1, 0, 1, 4, '1%1')
-      assertMapAstNode(modulo.left, 1, 0, 1, 0, '1')
-      assertMapAstNode(modulo.right, 1, 4, 1, 4, '1')
+      assertMapAstNode(modulo, 1, 0, 1, 5, '1 % 1')
+      assertMapAstNode(modulo.left, 1, 0, 1, 1, '1')
+      assertMapAstNode(modulo.right, 1, 4, 1, 5, '1')
     })
 
     it('abs', () => {
       const abs = execParseExpression('abs(0);') as ast.AbsNode
       expect(abs).toBeTruthy()
       expect(abs.type).toBe(ast.NodeType.Abs)
-      assertMapAstNode(abs, 1, 0, 1, 5, 'abs(0)')
-      assertMapAstNode(abs.value, 1, 4, 1, 4, '0')
+      assertMapAstNode(abs, 1, 0, 1, 6, 'abs(0)')
+      assertMapAstNode(abs.value, 1, 4, 1, 5, '0')
     })
 
     it('atan2', () => {
       const atan2 = execParseExpression('atan2(0,1);') as ast.Atan2Node
       expect(atan2).toBeTruthy()
       expect(atan2.type).toBe(ast.NodeType.Atan2)
-      assertMapAstNode(atan2, 1, 0, 1, 9, 'atan2(0,1)')
-      assertMapAstNode(atan2.y, 1, 6, 1, 6, '0')
-      assertMapAstNode(atan2.x, 1, 8, 1, 8, '1')
+      assertMapAstNode(atan2, 1, 0, 1, 10, 'atan2(0,1)')
+      assertMapAstNode(atan2.y, 1, 6, 1, 7, '0')
+      assertMapAstNode(atan2.x, 1, 8, 1, 9, '1')
     })
 
     it('ceil', () => {
       const ceil = execParseExpression('ceil(0);') as ast.CeilNode
       expect(ceil).toBeTruthy()
       expect(ceil.type).toBe(ast.NodeType.Ceil)
-      assertMapAstNode(ceil, 1, 0, 1, 6, 'ceil(0)')
-      assertMapAstNode(ceil.value, 1, 5, 1, 5, '0')
+      assertMapAstNode(ceil, 1, 0, 1, 7, 'ceil(0)')
+      assertMapAstNode(ceil.value, 1, 5, 1, 6, '0')
     })
 
     it('cos', () => {
       const cos = execParseExpression('cos(0);') as ast.CosNode
       expect(cos).toBeTruthy()
       expect(cos.type).toBe(ast.NodeType.Cos)
-      assertMapAstNode(cos, 1, 0, 1, 5, 'cos(0)')
-      assertMapAstNode(cos.value, 1, 4, 1, 4, '0')
+      assertMapAstNode(cos, 1, 0, 1, 6, 'cos(0)')
+      assertMapAstNode(cos.value, 1, 4, 1, 5, '0')
     })
 
     it('exp', () => {
       const exp = execParseExpression('exp(0);') as ast.ExpNode
       expect(exp).toBeTruthy()
       expect(exp.type).toBe(ast.NodeType.Exp)
-      assertMapAstNode(exp, 1, 0, 1, 5, 'exp(0)')
-      assertMapAstNode(exp.value, 1, 4, 1, 4, '0')
+      assertMapAstNode(exp, 1, 0, 1, 6, 'exp(0)')
+      assertMapAstNode(exp.value, 1, 4, 1, 5, '0')
     })
 
     it('floor', () => {
       const floor = execParseExpression('floor(0);') as ast.FloorNode
       expect(floor).toBeTruthy()
       expect(floor.type).toBe(ast.NodeType.Floor)
-      assertMapAstNode(floor, 1, 0, 1, 7, 'floor(0)')
-      assertMapAstNode(floor.value, 1, 6, 1, 6, '0')
+      assertMapAstNode(floor, 1, 0, 1, 8, 'floor(0)')
+      assertMapAstNode(floor.value, 1, 6, 1, 7, '0')
     })
 
     it('log', () => {
       const log = execParseExpression('log(0);') as ast.LogNode
       expect(log).toBeTruthy()
       expect(log.type).toBe(ast.NodeType.Log)
-      assertMapAstNode(log, 1, 0, 1, 5, 'log(0)')
-      assertMapAstNode(log.value, 1, 4, 1, 4, '0')
+      assertMapAstNode(log, 1, 0, 1, 6, 'log(0)')
+      assertMapAstNode(log.value, 1, 4, 1, 5, '0')
     })
 
     it('pow', () => {
       const pow = execParseExpression('pow(0,1);') as ast.PowNode
       expect(pow).toBeTruthy()
       expect(pow.type).toBe(ast.NodeType.Pow)
-      assertMapAstNode(pow, 1, 0, 1, 7, 'pow(0,1)')
-      assertMapAstNode(pow.x, 1, 4, 1, 4, '0')
-      assertMapAstNode(pow.y, 1, 6, 1, 6, '1')
+      assertMapAstNode(pow, 1, 0, 1, 8, 'pow(0,1)')
+      assertMapAstNode(pow.x, 1, 4, 1, 5, '0')
+      assertMapAstNode(pow.y, 1, 6, 1, 7, '1')
     })
 
     it('rand', () => {
       const rand = execParseExpression('rand(0);') as ast.RandNode
       expect(rand).toBeTruthy()
       expect(rand.type).toBe(ast.NodeType.Rand)
-      assertMapAstNode(rand, 1, 0, 1, 6, 'rand(0)')
+      assertMapAstNode(rand, 1, 0, 1, 7, 'rand(0)')
       expect(rand.value).toBeTruthy()
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      assertMapAstNode(rand.value!, 1, 5, 1, 5, '0')
+      assertMapAstNode(rand.value!, 1, 5, 1, 6, '0')
     })
 
     it('empty argument rand', () => {
       const rand = execParseExpression('rand();') as ast.RandNode
       expect(rand).toBeTruthy()
       expect(rand.type).toBe(ast.NodeType.Rand)
-      assertMapAstNode(rand, 1, 0, 1, 5, 'rand()')
+      assertMapAstNode(rand, 1, 0, 1, 6, 'rand()')
       expect(rand.value).toBeFalsy()
     })
 
@@ -156,16 +156,16 @@ describe('MapV2Parser', () => {
       const sin = execParseExpression('sin(0);') as ast.SinNode
       expect(sin).toBeTruthy()
       expect(sin.type).toBe(ast.NodeType.Sin)
-      assertMapAstNode(sin, 1, 0, 1, 5, 'sin(0)')
-      assertMapAstNode(sin.value, 1, 4, 1, 4, '0')
+      assertMapAstNode(sin, 1, 0, 1, 6, 'sin(0)')
+      assertMapAstNode(sin.value, 1, 4, 1, 5, '0')
     })
 
     it('sqrt', () => {
       const sqrt = execParseExpression('sqrt(0);') as ast.SqrtNode
       expect(sqrt).toBeTruthy()
       expect(sqrt.type).toBe(ast.NodeType.Sqrt)
-      assertMapAstNode(sqrt, 1, 0, 1, 6, 'sqrt(0)')
-      assertMapAstNode(sqrt.value, 1, 5, 1, 5, '0')
+      assertMapAstNode(sqrt, 1, 0, 1, 7, 'sqrt(0)')
+      assertMapAstNode(sqrt.value, 1, 5, 1, 6, '0')
     })
 
     it('var', () => {
@@ -173,7 +173,7 @@ describe('MapV2Parser', () => {
       expect(variable).toBeTruthy()
       expect(variable.type).toBe(ast.NodeType.Var)
       expect(variable.varName).toBe('aBC_0')
-      assertMapAstNode(variable, 1, 0, 1, 5, '$aBC_0')
+      assertMapAstNode(variable, 1, 0, 1, 6, '$aBC_0')
     })
 
     it('number', () => {
@@ -181,7 +181,7 @@ describe('MapV2Parser', () => {
       expect(number).toBeTruthy()
       expect(number.type).toBe(ast.NodeType.Number)
       expect(number.value).toBe('100')
-      assertMapAstNode(number, 1, 0, 1, 2, '100')
+      assertMapAstNode(number, 1, 0, 1, 3, '100')
     })
 
     it('empty string', () => {
@@ -189,7 +189,7 @@ describe('MapV2Parser', () => {
       expect(string).toBeTruthy()
       expect(string.type).toBe(ast.NodeType.String)
       expect(string.value).toBe('')
-      assertMapAstNode(string, 1, 0, 1, 1, `''`)
+      assertMapAstNode(string, 1, 0, 1, 2, `''`)
     })
 
     it('reserved word string', () => {
@@ -197,14 +197,14 @@ describe('MapV2Parser', () => {
       expect(string).toBeTruthy()
       expect(string.type).toBe(ast.NodeType.String)
       expect(string.value).toBe('Curve')
-      assertMapAstNode(string, 1, 0, 1, 6, `'Curve'`)
+      assertMapAstNode(string, 1, 0, 1, 7, `'Curve'`)
     })
 
     it('distance', () => {
       const distance = execParseExpression('dIsTAnce;') as ast.DistanceNode
       expect(distance).toBeTruthy()
       expect(distance.type).toBe(ast.NodeType.Distance)
-      assertMapAstNode(distance, 1, 0, 1, 7, 'dIsTAnce')
+      assertMapAstNode(distance, 1, 0, 1, 8, 'dIsTAnce')
     })
   })
 })

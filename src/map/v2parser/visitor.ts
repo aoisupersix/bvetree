@@ -1,10 +1,11 @@
-import { ParserRuleContext } from 'antlr4ts'
+import { CharStream, ParserRuleContext, Token } from 'antlr4ts'
 import { AbstractParseTreeVisitor } from 'antlr4ts/tree/AbstractParseTreeVisitor'
 import * as parser from './gen/MapParser'
 import { MapParserVisitor } from './gen/MapParserVisitor'
 import { MapLexer } from './gen/MapLexer'
 import * as ast from '#/map/ast-nodes'
 import { Position } from '#/position'
+import { Interval } from 'antlr4ts/misc/Interval'
 
 type NullableAstNode = ast.MapAstNode | null
 
@@ -12,8 +13,37 @@ export class Visitor
   extends AbstractParseTreeVisitor<NullableAstNode>
   implements MapParserVisitor<NullableAstNode>
 {
+  constructor(private charStream: CharStream) {
+    super()
+  }
+
   protected defaultResult(): NullableAstNode {
     return null
+  }
+
+  /**
+   * Get original text (string containing whitespace) of context.
+   * @param ctx Antlr rule context
+   * @returns original text (string containing whitespace) of context
+   */
+  private getOriginalTextOfContext(ctx: ParserRuleContext): string {
+    const interval = new Interval(
+      ctx.start.startIndex,
+      ctx.stop?.stopIndex ?? ctx.start.startIndex
+    )
+
+    return this.charStream.getText(interval)
+  }
+
+  /**
+   * Get original text (string containing whitespace) of token.
+   * @param ctx Antlr token
+   * @returns original text (string containing whitespace) of token
+   */
+  private getOriginalTextOfToken(token: Token): string {
+    const interval = new Interval(token.startIndex, token.stopIndex)
+
+    return this.charStream.getText(interval)
   }
 
   /**
@@ -23,7 +53,7 @@ export class Visitor
   private getStartPosition(ctx: ParserRuleContext): Position {
     return {
       line: ctx.start.line,
-      charPositionInLine: ctx.start.charPositionInLine,
+      charIndexInLine: ctx.start.charPositionInLine,
     }
   }
 
@@ -33,9 +63,12 @@ export class Visitor
    * @param ctx Antlr rule context
    */
   private getEndPosition(ctx: ParserRuleContext): Position {
+    const lastToken = ctx.stop ?? ctx.start
     return {
       line: ctx.stop?.line ?? ctx.start.line,
-      charPositionInLine: ctx.stop?.stopIndex ?? ctx.start.stopIndex,
+      charIndexInLine:
+        lastToken.charPositionInLine +
+        this.getOriginalTextOfToken(lastToken).length,
     }
   }
 
@@ -43,7 +76,7 @@ export class Visitor
     const node = new ast.RootNode(
       this.getStartPosition(ctx),
       this.getEndPosition(ctx),
-      ctx.text
+      this.getOriginalTextOfContext(ctx)
     )
 
     for (const statementCtx of ctx.statement()) {
@@ -69,7 +102,7 @@ export class Visitor
     return new ast.DistanceStatementNode(
       this.getStartPosition(ctx),
       this.getEndPosition(ctx),
-      ctx.text,
+      this.getOriginalTextOfContext(ctx),
       value
     )
   }
@@ -85,7 +118,7 @@ export class Visitor
     return new ast.VarAssignStatementNode(
       this.getStartPosition(ctx),
       this.getEndPosition(ctx),
-      ctx.text,
+      this.getOriginalTextOfContext(ctx),
       ctx._v.text,
       value
     )
@@ -95,7 +128,7 @@ export class Visitor
     const node = new ast.MapFunctionNode(
       this.getStartPosition(ctx),
       this.getEndPosition(ctx),
-      ctx.text,
+      this.getOriginalTextOfContext(ctx),
       ctx.element().text.toLowerCase(),
       ctx.function().text.toLowerCase()
     )
@@ -118,7 +151,7 @@ export class Visitor
     const node = new ast.MapFunctionWithKeyNode(
       this.getStartPosition(ctx),
       this.getEndPosition(ctx),
-      ctx.text,
+      this.getOriginalTextOfContext(ctx),
       ctx.element().text.toLowerCase(),
       ctx.function().text.toLowerCase(),
       key
@@ -156,7 +189,7 @@ export class Visitor
     return new ast.ParensNode(
       this.getStartPosition(ctx),
       this.getEndPosition(ctx),
-      ctx.text,
+      this.getOriginalTextOfContext(ctx),
       inner
     )
   }
@@ -172,7 +205,7 @@ export class Visitor
     return new ast.UnaryNode(
       this.getStartPosition(ctx),
       this.getEndPosition(ctx),
-      ctx.text,
+      this.getOriginalTextOfContext(ctx),
       inner
     )
   }
@@ -187,7 +220,7 @@ export class Visitor
       | null = null
     const start = this.getStartPosition(ctx)
     const end = this.getEndPosition(ctx)
-    const text = ctx.text
+    const text = this.getOriginalTextOfContext(ctx)
     const left = this.visit(ctx._left)
     const right = this.visit(ctx._right)
     if (!ast.isExpressionNode(left) || !ast.isExpressionNode(right)) {
@@ -226,7 +259,7 @@ export class Visitor
     return new ast.AbsNode(
       this.getStartPosition(ctx),
       this.getEndPosition(ctx),
-      ctx.text,
+      this.getOriginalTextOfContext(ctx),
       value
     )
   }
@@ -241,7 +274,7 @@ export class Visitor
     return new ast.Atan2Node(
       this.getStartPosition(ctx),
       this.getEndPosition(ctx),
-      ctx.text,
+      this.getOriginalTextOfContext(ctx),
       x,
       y
     )
@@ -256,7 +289,7 @@ export class Visitor
     return new ast.CeilNode(
       this.getStartPosition(ctx),
       this.getEndPosition(ctx),
-      ctx.text,
+      this.getOriginalTextOfContext(ctx),
       value
     )
   }
@@ -270,7 +303,7 @@ export class Visitor
     return new ast.CosNode(
       this.getStartPosition(ctx),
       this.getEndPosition(ctx),
-      ctx.text,
+      this.getOriginalTextOfContext(ctx),
       value
     )
   }
@@ -284,7 +317,7 @@ export class Visitor
     return new ast.ExpNode(
       this.getStartPosition(ctx),
       this.getEndPosition(ctx),
-      ctx.text,
+      this.getOriginalTextOfContext(ctx),
       value
     )
   }
@@ -298,7 +331,7 @@ export class Visitor
     return new ast.FloorNode(
       this.getStartPosition(ctx),
       this.getEndPosition(ctx),
-      ctx.text,
+      this.getOriginalTextOfContext(ctx),
       value
     )
   }
@@ -312,7 +345,7 @@ export class Visitor
     return new ast.LogNode(
       this.getStartPosition(ctx),
       this.getEndPosition(ctx),
-      ctx.text,
+      this.getOriginalTextOfContext(ctx),
       value
     )
   }
@@ -327,7 +360,7 @@ export class Visitor
     return new ast.PowNode(
       this.getStartPosition(ctx),
       this.getEndPosition(ctx),
-      ctx.text,
+      this.getOriginalTextOfContext(ctx),
       x,
       y
     )
@@ -345,7 +378,7 @@ export class Visitor
     return new ast.RandNode(
       this.getStartPosition(ctx),
       this.getEndPosition(ctx),
-      ctx.text,
+      this.getOriginalTextOfContext(ctx),
       value ?? undefined
     )
   }
@@ -359,7 +392,7 @@ export class Visitor
     return new ast.SinNode(
       this.getStartPosition(ctx),
       this.getEndPosition(ctx),
-      ctx.text,
+      this.getOriginalTextOfContext(ctx),
       value
     )
   }
@@ -373,7 +406,7 @@ export class Visitor
     return new ast.SqrtNode(
       this.getStartPosition(ctx),
       this.getEndPosition(ctx),
-      ctx.text,
+      this.getOriginalTextOfContext(ctx),
       value
     )
   }
@@ -382,7 +415,7 @@ export class Visitor
     return new ast.DistanceNode(
       this.getStartPosition(ctx),
       this.getEndPosition(ctx),
-      ctx.text
+      this.getOriginalTextOfContext(ctx)
     )
   }
 
@@ -390,7 +423,7 @@ export class Visitor
     return new ast.NumberNode(
       this.getStartPosition(ctx),
       this.getEndPosition(ctx),
-      ctx.text,
+      this.getOriginalTextOfContext(ctx),
       ctx.NUM().text
     )
   }
@@ -399,7 +432,7 @@ export class Visitor
     return new ast.StringNode(
       this.getStartPosition(ctx),
       this.getEndPosition(ctx),
-      ctx.text,
+      this.getOriginalTextOfContext(ctx),
       ctx.string().value ?? ''
     )
   }
@@ -408,7 +441,7 @@ export class Visitor
     return new ast.VarNode(
       this.getStartPosition(ctx),
       this.getEndPosition(ctx),
-      ctx.text,
+      this.getOriginalTextOfContext(ctx),
       ctx._v.varName ?? ''
     )
   }

@@ -55,22 +55,22 @@ export const execParseExpression = (input: string): ExpressionNode | null => {
  * Assertion check of MapAstNode
  * @param node assertion target node
  * @param startLine node start line
- * @param startCharPositionInLine node start position
+ * @param startCharIndexInLine node start char index
  * @param endLine node end line
- * @param endCharPositionInLine node end position
+ * @param endCharIndexInLine node end char index
  * @param text node text
  */
 export const assertMapAstNode = (
   node: MapAstNode,
   startLine: number,
-  startCharPositionInLine: number,
+  startCharIndexInLine: number,
   endLine: number,
-  endCharPositionInLine: number,
+  endCharIndexInLine: number,
   text: string
 ): void => {
   expect(node.start.line).toBe(startLine)
-  expect(node.start.charPositionInLine).toBe(startCharPositionInLine)
+  expect(node.start.charIndexInLine).toBe(startCharIndexInLine)
   expect(node.end.line).toBe(endLine)
-  expect(node.end.charPositionInLine).toBe(endCharPositionInLine)
+  expect(node.end.charIndexInLine).toBe(endCharIndexInLine)
   expect(node.text).toBe(text)
 }

@@ -3,12 +3,12 @@
  */
 export interface Position {
   /**
-   * Line number(1 origin)
+   * Line number (1 origin).
    */
   line: number
 
   /**
-   * Character position in line(0 origin)
+   * Character index in line (0 origin).
    */
-  charPositionInLine: number
+  charIndexInLine: number
 }

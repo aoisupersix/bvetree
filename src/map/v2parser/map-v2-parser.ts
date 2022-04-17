@@ -11,7 +11,7 @@ export class MapV2Parser {
     const tokenStream = new CommonTokenStream(lexer)
     const parser = new MapParser(tokenStream)
     const cst = parser.root()
-    const ast = new Visitor().visit(cst)
+    const ast = new Visitor(charStream).visit(cst)
 
     return ast
   }

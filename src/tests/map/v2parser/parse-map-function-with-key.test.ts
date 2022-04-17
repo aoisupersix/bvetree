@@ -13,8 +13,8 @@ describe('MapV2Parser', () => {
         1,
         0,
         1,
-        27,
-        `Track['key'].Position(0,1);`
+        28,
+        `Track['key'].Position(0, 1);`
       )
       expect(trackPosition.elementName).toBe('track')
       expect(trackPosition.functionName).toBe('position')
@@ -22,12 +22,12 @@ describe('MapV2Parser', () => {
 
       const key = trackPosition.key as StringNode
       expect(key).toBeTruthy()
-      assertMapAstNode(key, 1, 6, 1, 10, `'key'`)
+      assertMapAstNode(key, 1, 6, 1, 11, `'key'`)
       expect(key.value).toBe('key')
 
       const x = trackPosition.arguments[0] as NumberNode
       expect(x).toBeTruthy()
-      assertMapAstNode(x, 1, 22, 1, 22, '0')
+      assertMapAstNode(x, 1, 22, 1, 23, '0')
       expect(x.value).toBe('0')
     })
   })

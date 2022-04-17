@@ -1,6 +1,6 @@
 /**
- * Map AST node types
- * All AST nodes have this type
+ * Map AST node types.
+ * All AST nodes has this type.
  */
 export enum NodeType {
   Abs = 'Abs',

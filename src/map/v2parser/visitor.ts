@@ -1,11 +1,10 @@
-import { CharStream, ParserRuleContext, Token } from 'antlr4ts'
+import { CharStream } from 'antlr4ts'
 import { AbstractParseTreeVisitor } from 'antlr4ts/tree/AbstractParseTreeVisitor'
 import * as parser from './gen/MapParser'
 import { MapParserVisitor } from './gen/MapParserVisitor'
 import { MapLexer } from './gen/MapLexer'
 import * as ast from '#/map/ast-nodes'
-import { Position } from '#/position'
-import { Interval } from 'antlr4ts/misc/Interval'
+import * as util from './util'
 
 type NullableAstNode = ast.MapAstNode | null
 
@@ -21,89 +20,38 @@ export class Visitor
     return null
   }
 
-  /**
-   * Get original text (string containing whitespace) of context.
-   * @param ctx Antlr rule context
-   * @returns original text (string containing whitespace) of context
-   */
-  private getOriginalTextOfContext(ctx: ParserRuleContext): string {
-    const interval = new Interval(
-      ctx.start.startIndex,
-      ctx.stop?.stopIndex ?? ctx.start.startIndex
-    )
-
-    return this.charStream.getText(interval)
-  }
-
-  /**
-   * Get original text (string containing whitespace) of token.
-   * @param ctx Antlr token
-   * @returns original text (string containing whitespace) of token
-   */
-  private getOriginalTextOfToken(token: Token): string {
-    const interval = new Interval(token.startIndex, token.stopIndex)
-
-    return this.charStream.getText(interval)
-  }
-
-  /**
-   * Get start position of context
-   * @param ctx Antlr rule context
-   */
-  private getStartPosition(ctx: ParserRuleContext): Position {
-    return {
-      line: ctx.start.line,
-      charIndexInLine: ctx.start.charPositionInLine,
-    }
-  }
-
-  /**
-   * Get end position of context
-   * If context end token is undefined, returns start position
-   * @param ctx Antlr rule context
-   */
-  private getEndPosition(ctx: ParserRuleContext): Position {
-    const lastToken = ctx.stop ?? ctx.start
-    return {
-      line: ctx.stop?.line ?? ctx.start.line,
-      charIndexInLine:
-        lastToken.charPositionInLine +
-        this.getOriginalTextOfToken(lastToken).length,
-    }
-  }
-
   visitRoot(ctx: parser.RootContext): NullableAstNode {
-    const node = new ast.RootNode(
-      this.getStartPosition(ctx),
-      this.getEndPosition(ctx),
-      this.getOriginalTextOfContext(ctx)
-    )
-
+    const statements: ast.StatementNode[] = []
     for (const statementCtx of ctx.statement()) {
       const statement = this.visit(statementCtx)
-      if (ast.isStatementNode(statement)) {
-        node.addStatement(statement)
+      if (util.isStatementNode(statement)) {
+        statements.push(statement)
       }
     }
 
-    return node
+    return util.createMapAstNode<ast.RootNode>(
+      ast.NodeType.Root,
+      ctx,
+      this.charStream,
+      { statements: statements }
+    )
   }
 
   visitDistanceStatement(
     ctx: parser.DistanceStatementContext
   ): NullableAstNode {
     const value = this.visit(ctx.expr())
-    if (!ast.isExpressionNode(value)) {
+    if (value === null) {
       throw new Error(
         'The expression in the distance statement is empty or invalid.'
       )
     }
 
-    return new ast.DistanceStatementNode(
-      this.getStartPosition(ctx),
-      this.getEndPosition(ctx),
-      this.getOriginalTextOfContext(ctx),
-      value
+    return util.createMapAstNode<ast.DistanceStatementNode>(
+      ast.NodeType.DistanceStatement,
+      ctx,
+      this.charStream,
+      { value: value }
     )
   }
 
@@ -111,57 +59,60 @@ export class Visitor
     ctx: parser.VarAssignStatementContext
   ): NullableAstNode {
     const value = this.visit(ctx.expr())
-    if (!ast.isExpressionNode(value)) {
+    if (value === null) {
       throw new Error('The expression in the var assign is empty or invalid.')
     }
 
-    return new ast.VarAssignStatementNode(
-      this.getStartPosition(ctx),
-      this.getEndPosition(ctx),
-      this.getOriginalTextOfContext(ctx),
-      ctx._v.text,
-      value
+    return util.createMapAstNode<ast.VarAssignStatementNode>(
+      ast.NodeType.VarAssignStatement,
+      ctx,
+      this.charStream,
+      { varName: ctx._v.text, value: value }
     )
   }
 
   visitSimpleStatement(ctx: parser.SimpleStatementContext): NullableAstNode {
-    const node = new ast.MapFunctionNode(
-      this.getStartPosition(ctx),
-      this.getEndPosition(ctx),
-      this.getOriginalTextOfContext(ctx),
-      ctx.element().text.toLowerCase(),
-      ctx.function().text.toLowerCase()
-    )
-
+    const args: NullableAstNode[] = []
     for (const argExpr of ctx.args().nullableExpr()) {
-      node.addArgument(this.visit(argExpr))
+      args.push(this.visit(argExpr))
     }
 
-    return node
+    return util.createMapAstNode<ast.MapFunctionNode>(
+      ast.NodeType.MapFunction,
+      ctx,
+      this.charStream,
+      {
+        element: ctx.element().text.toLowerCase(),
+        function: ctx.function().text.toLowerCase(),
+        arguments: args,
+      }
+    )
   }
 
   visitKeyStatement(ctx: parser.KeyStatementContext): NullableAstNode {
     const key = this.visit(ctx.expr())
-    if (!ast.isExpressionNode(key)) {
+    if (key === null) {
       throw new Error(
         'The expression of map statement key is empty or invalid.'
       )
     }
 
-    const node = new ast.MapFunctionWithKeyNode(
-      this.getStartPosition(ctx),
-      this.getEndPosition(ctx),
-      this.getOriginalTextOfContext(ctx),
-      ctx.element().text.toLowerCase(),
-      ctx.function().text.toLowerCase(),
-      key
-    )
-
+    const args: NullableAstNode[] = []
     for (const argExpr of ctx.args().nullableExpr()) {
-      node.addArgument(this.visit(argExpr))
+      args.push(this.visit(argExpr))
     }
 
-    return node
+    return util.createMapAstNode<ast.MapFunctionWithKeyNode>(
+      ast.NodeType.MapFunctionWithKey,
+      ctx,
+      this.charStream,
+      {
+        element: ctx.element().text.toLowerCase(),
+        function: ctx.function().text.toLowerCase(),
+        key: key,
+        arguments: args,
+      }
+    )
   }
 
   visitNullableExpr(ctx: parser.NullableExprContext): NullableAstNode {
@@ -180,269 +131,269 @@ export class Visitor
 
   visitParensExpr(ctx: parser.ParensExprContext): NullableAstNode {
     const inner = this.visit(ctx.expr())
-    if (!ast.isExpressionNode(inner)) {
+    if (inner === null) {
       throw new Error(
         'The expression in the parens operation is empty or invalid.'
       )
     }
 
-    return new ast.ParensNode(
-      this.getStartPosition(ctx),
-      this.getEndPosition(ctx),
-      this.getOriginalTextOfContext(ctx),
-      inner
+    return util.createMapAstNode<ast.ExpressionValueNode>(
+      ast.NodeType.Parens,
+      ctx,
+      this.charStream,
+      { innerValue: inner }
     )
   }
 
   visitUnaryExpr(ctx: parser.UnaryExprContext): NullableAstNode {
     const inner = this.visit(ctx.expr())
-    if (!ast.isExpressionNode(inner)) {
+    if (inner === null) {
       throw new Error(
         'The expression in the unary operation is empty or invalid.'
       )
     }
 
-    return new ast.UnaryNode(
-      this.getStartPosition(ctx),
-      this.getEndPosition(ctx),
-      this.getOriginalTextOfContext(ctx),
-      inner
+    return util.createMapAstNode<ast.ExpressionValueNode>(
+      ast.NodeType.Unary,
+      ctx,
+      this.charStream,
+      { innerValue: inner }
     )
   }
 
   visitInfixExpr(ctx: parser.InfixExprContext): NullableAstNode {
-    let node:
-      | ast.AdditionNode
-      | ast.SubtractionNode
-      | ast.MultiplicationNode
-      | ast.DivisionNode
-      | ast.ModuloNode
-      | null = null
-    const start = this.getStartPosition(ctx)
-    const end = this.getEndPosition(ctx)
-    const text = this.getOriginalTextOfContext(ctx)
     const left = this.visit(ctx._left)
     const right = this.visit(ctx._right)
-    if (!ast.isExpressionNode(left) || !ast.isExpressionNode(right)) {
+    if (left === null || right === null) {
       throw new Error(
         'Left or right expression in the infix expression is empty or invalid.'
       )
     }
 
+    let type: ast.NodeType | null = null
+
     switch (ctx._op.type) {
       case MapLexer.PLUS:
-        node = new ast.AdditionNode(start, end, text, left, right)
+        type = ast.NodeType.Addition
         break
       case MapLexer.MINUS:
-        node = new ast.SubtractionNode(start, end, text, left, right)
+        type = ast.NodeType.Subtraction
         break
       case MapLexer.MULT:
-        node = new ast.MultiplicationNode(start, end, text, left, right)
+        type = ast.NodeType.Multiplication
         break
       case MapLexer.DIV:
-        node = new ast.DivisionNode(start, end, text, left, right)
+        type = ast.NodeType.Division
         break
       case MapLexer.MOD:
-        node = new ast.ModuloNode(start, end, text, left, right)
+        type = ast.NodeType.Modulo
         break
     }
 
-    return node
+    if (type === null) {
+      throw new Error(`invalid operand: ${ctx._op.text}`)
+    }
+
+    return util.createMapAstNode<ast.InfixExpressionNode>(
+      type,
+      ctx,
+      this.charStream,
+      { left: left, right: right }
+    )
   }
 
   visitAbsExpr(ctx: parser.AbsExprContext): NullableAstNode {
     const value = this.visit(ctx._value)
-    if (!ast.isExpressionNode(value)) {
+    if (value === null) {
       throw new Error('The expression in the function is empty or invalid.')
     }
 
-    return new ast.AbsNode(
-      this.getStartPosition(ctx),
-      this.getEndPosition(ctx),
-      this.getOriginalTextOfContext(ctx),
-      value
+    return util.createMapAstNode<ast.FunctionNode>(
+      ast.NodeType.Abs,
+      ctx,
+      this.charStream,
+      { arguments: [value] }
     )
   }
 
   visitAtan2Expr(ctx: parser.Atan2ExprContext): NullableAstNode {
     const y = this.visit(ctx._y)
     const x = this.visit(ctx._x)
-    if (!ast.isExpressionNode(y) || !ast.isExpressionNode(x)) {
+    if (y === null || x === null) {
       throw new Error('The expression in the function is empty or invalid.')
     }
 
-    return new ast.Atan2Node(
-      this.getStartPosition(ctx),
-      this.getEndPosition(ctx),
-      this.getOriginalTextOfContext(ctx),
-      x,
-      y
+    return util.createMapAstNode<ast.FunctionNode>(
+      ast.NodeType.Atan2,
+      ctx,
+      this.charStream,
+      { arguments: [y, x] } // The argument order of the atan2 function is y,x in that order.
     )
   }
 
   visitCeilExpr(ctx: parser.CeilExprContext): NullableAstNode {
     const value = this.visit(ctx._value)
-    if (!ast.isExpressionNode(value)) {
+    if (value === null) {
       throw new Error('The expression in the function is empty or invalid.')
     }
 
-    return new ast.CeilNode(
-      this.getStartPosition(ctx),
-      this.getEndPosition(ctx),
-      this.getOriginalTextOfContext(ctx),
-      value
+    return util.createMapAstNode<ast.FunctionNode>(
+      ast.NodeType.Ceil,
+      ctx,
+      this.charStream,
+      { arguments: [value] }
     )
   }
 
   visitCosExpr(ctx: parser.CosExprContext): NullableAstNode {
     const value = this.visit(ctx._value)
-    if (!ast.isExpressionNode(value)) {
+    if (value === null) {
       throw new Error('The expression in the function is empty or invalid.')
     }
 
-    return new ast.CosNode(
-      this.getStartPosition(ctx),
-      this.getEndPosition(ctx),
-      this.getOriginalTextOfContext(ctx),
-      value
+    return util.createMapAstNode<ast.FunctionNode>(
+      ast.NodeType.Cos,
+      ctx,
+      this.charStream,
+      { arguments: [value] }
     )
   }
 
   visitExpExpr(ctx: parser.ExpExprContext): NullableAstNode {
     const value = this.visit(ctx._value)
-    if (!ast.isExpressionNode(value)) {
+    if (value === null) {
       throw new Error('The expression in the function is empty or invalid.')
     }
 
-    return new ast.ExpNode(
-      this.getStartPosition(ctx),
-      this.getEndPosition(ctx),
-      this.getOriginalTextOfContext(ctx),
-      value
+    return util.createMapAstNode<ast.FunctionNode>(
+      ast.NodeType.Exp,
+      ctx,
+      this.charStream,
+      { arguments: [value] }
     )
   }
 
   visitFloorExpr(ctx: parser.FloorExprContext): NullableAstNode {
     const value = this.visit(ctx._value)
-    if (!ast.isExpressionNode(value)) {
+    if (value === null) {
       throw new Error('The expression in the function is empty or invalid.')
     }
 
-    return new ast.FloorNode(
-      this.getStartPosition(ctx),
-      this.getEndPosition(ctx),
-      this.getOriginalTextOfContext(ctx),
-      value
+    return util.createMapAstNode<ast.FunctionNode>(
+      ast.NodeType.Floor,
+      ctx,
+      this.charStream,
+      { arguments: [value] }
     )
   }
 
   visitLogExpr(ctx: parser.LogExprContext): NullableAstNode {
     const value = this.visit(ctx._value)
-    if (!ast.isExpressionNode(value)) {
+    if (value === null) {
       throw new Error('The expression in the function is empty or invalid.')
     }
 
-    return new ast.LogNode(
-      this.getStartPosition(ctx),
-      this.getEndPosition(ctx),
-      this.getOriginalTextOfContext(ctx),
-      value
+    return util.createMapAstNode<ast.FunctionNode>(
+      ast.NodeType.Log,
+      ctx,
+      this.charStream,
+      { arguments: [value] }
     )
   }
 
   visitPowExpr(ctx: parser.PowExprContext): NullableAstNode {
     const x = this.visit(ctx._x)
     const y = this.visit(ctx._y)
-    if (!ast.isExpressionNode(x) || !ast.isExpressionNode(y)) {
+    if (x === null || y === null) {
       throw new Error('The expression in the function is empty or invalid.')
     }
 
-    return new ast.PowNode(
-      this.getStartPosition(ctx),
-      this.getEndPosition(ctx),
-      this.getOriginalTextOfContext(ctx),
-      x,
-      y
+    return util.createMapAstNode<ast.FunctionNode>(
+      ast.NodeType.Pow,
+      ctx,
+      this.charStream,
+      { arguments: [x, y] }
     )
   }
 
   visitRandExpr(ctx: parser.RandExprContext): NullableAstNode {
-    let value: ast.ExpressionNode | undefined = undefined
+    let value: NullableAstNode = null
     if (ctx._value) {
-      value = this.visit(ctx._value) as ast.ExpressionNode
-      if (!ast.isExpressionNode(value)) {
+      value = this.visit(ctx._value)
+      if (value === null) {
         throw new Error('The expression in the function is invalid.')
       }
     }
 
-    return new ast.RandNode(
-      this.getStartPosition(ctx),
-      this.getEndPosition(ctx),
-      this.getOriginalTextOfContext(ctx),
-      value ?? undefined
+    return util.createMapAstNode<ast.FunctionNode>(
+      ast.NodeType.Rand,
+      ctx,
+      this.charStream,
+      { arguments: [value] }
     )
   }
 
   visitSinExpr(ctx: parser.SinExprContext): NullableAstNode {
     const value = this.visit(ctx._value)
-    if (!ast.isExpressionNode(value)) {
+    if (value === null) {
       throw new Error('The expression in the function is empty or invalid.')
     }
 
-    return new ast.SinNode(
-      this.getStartPosition(ctx),
-      this.getEndPosition(ctx),
-      this.getOriginalTextOfContext(ctx),
-      value
+    return util.createMapAstNode<ast.FunctionNode>(
+      ast.NodeType.Sin,
+      ctx,
+      this.charStream,
+      { arguments: [value] }
     )
   }
 
   visitSqrtExpr(ctx: parser.SqrtExprContext): NullableAstNode {
     const value = this.visit(ctx._value)
-    if (!ast.isExpressionNode(value)) {
+    if (value === null) {
       throw new Error('The expression in the function is empty or invalid.')
     }
 
-    return new ast.SqrtNode(
-      this.getStartPosition(ctx),
-      this.getEndPosition(ctx),
-      this.getOriginalTextOfContext(ctx),
-      value
+    return util.createMapAstNode<ast.FunctionNode>(
+      ast.NodeType.Sqrt,
+      ctx,
+      this.charStream,
+      { arguments: [value] }
     )
   }
 
   visitDistanceExpr(ctx: parser.DistanceExprContext): NullableAstNode {
-    return new ast.DistanceNode(
-      this.getStartPosition(ctx),
-      this.getEndPosition(ctx),
-      this.getOriginalTextOfContext(ctx)
+    return util.createMapAstNode<ast.MapAstNode>(
+      ast.NodeType.Distance,
+      ctx,
+      this.charStream,
+      {}
     )
   }
 
   visitNumberExpr(ctx: parser.NumberExprContext): NullableAstNode {
-    return new ast.NumberNode(
-      this.getStartPosition(ctx),
-      this.getEndPosition(ctx),
-      this.getOriginalTextOfContext(ctx),
-      ctx.NUM().text
+    return util.createMapAstNode<ast.ValueNode>(
+      ast.NodeType.Number,
+      ctx,
+      this.charStream,
+      { value: ctx.NUM().text }
     )
   }
 
   visitStringExpr(ctx: parser.StringExprContext): NullableAstNode {
-    return new ast.StringNode(
-      this.getStartPosition(ctx),
-      this.getEndPosition(ctx),
-      this.getOriginalTextOfContext(ctx),
-      ctx.string().value ?? ''
+    return util.createMapAstNode<ast.ValueNode>(
+      ast.NodeType.String,
+      ctx,
+      this.charStream,
+      { value: ctx.string().value ?? '' }
     )
   }
 
   visitVarExpr(ctx: parser.VarExprContext): NullableAstNode {
-    return new ast.VarNode(
-      this.getStartPosition(ctx),
-      this.getEndPosition(ctx),
-      this.getOriginalTextOfContext(ctx),
-      ctx._v.varName ?? ''
+    return util.createMapAstNode<ast.VarNode>(
+      ast.NodeType.Var,
+      ctx,
+      this.charStream,
+      { varName: ctx._v.varName ?? '' }
     )
   }
 

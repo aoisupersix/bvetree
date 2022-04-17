@@ -32,7 +32,7 @@ jobs:
       - name: Run test
         run: npm test --coverage
 
-      - name: Coveralls
+      - name: Upload coverage
         uses: coverallsapp/github-action@master
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}

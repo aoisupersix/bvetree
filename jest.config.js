@@ -14,6 +14,6 @@ module.exports = {
     '**/tests/**/*.test.ts'
   ],
   moduleNameMapper: {
-    "^#/(.+)": "<rootDir>/src/$1"
+    "^#/([a-zA-Z0-9\-])/(.+)": "<rootDir>/packages/@bvetree/$1/src/$2"
   },
 };

@@ -3,7 +3,7 @@ import { AbstractParseTreeVisitor } from 'antlr4ts/tree/AbstractParseTreeVisitor
 import * as parser from './gen/MapParser'
 import { MapParserVisitor } from './gen/MapParserVisitor'
 import { MapLexer } from './gen/MapLexer'
-import * as ast from '#/map/ast-nodes'
+import * as ast from '@bvetree/ast/src/map-v2'
 import * as util from './util'
 
 type NullableAstNode = ast.MapAstNode | null

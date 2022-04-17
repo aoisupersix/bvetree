@@ -1,0 +1,4 @@
+{
+  "files": [],
+  "references": [{ "path": "packages/bvetree-ast" }, { "path": "packages/bvetree-parser" }]
+}

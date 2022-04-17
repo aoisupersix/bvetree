@@ -1,6 +1,14 @@
-import { MapAstNode, NodeType, RootNode, StatementNode } from '#/map/ast-nodes'
-import { MapV2Parser } from '#/map/v2parser/map-v2-parser'
-import { isDistanceStatementNode, isRootNode } from '#/map/v2parser/util'
+import {
+  MapAstNode,
+  NodeType,
+  RootNode,
+  StatementNode,
+} from '@bvetree/ast/src/map-v2'
+import { MapV2Parser } from '@bvetree/parser/src/map-v2/map-v2-parser'
+import {
+  isDistanceStatementNode,
+  isRootNode,
+} from '@bvetree/parser/src/map-v2/util'
 
 /**
  * Execute MapV2Parser.parse() and return the return value as RootNode or null.

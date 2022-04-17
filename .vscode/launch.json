@@ -19,7 +19,7 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "ts-node[debug]",
+      "name": "parser[debug]",
       "program": "${workspaceFolder}/node_modules/ts-node/dist/bin.js",
       "args": [
         "${workspaceFolder}/src/index.ts"

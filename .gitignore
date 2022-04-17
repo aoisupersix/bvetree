@@ -1,6 +1,7 @@
 node_modules/
 .node_modules/
-out
+dist
+*.tsbuildinfo
 built/*
 tests/cases/rwc/*
 tests/cases/test262/*
@@ -80,4 +81,4 @@ TEST-results.xml
 
 # antlr generated files
 .antlr
-src/map/v2parser/gen
+packages/bvetree-parser/src/map-v2/gen

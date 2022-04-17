@@ -1,10 +1,10 @@
-import { MapV2Parser } from '#/map/v2parser/map-v2-parser'
+import { MapV2Parser } from '@bvetree/parser/src/map-v2/map-v2-parser'
 import {
   DistanceStatementNode,
   NodeType,
   RootNode,
   ValueNode,
-} from '#/map/ast-nodes'
+} from '@bvetree/ast/src/map-v2'
 import { assertMapAstNode } from './util'
 
 describe('MapV2Parser', () => {

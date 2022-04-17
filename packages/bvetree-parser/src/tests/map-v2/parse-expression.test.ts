@@ -1,5 +1,5 @@
 import { assertMapAstNode, execParseExpression } from './util'
-import * as ast from '#/map/ast-nodes'
+import * as ast from '@bvetree/ast/src/map-v2'
 
 describe('MapV2Parser', () => {
   describe('#parse_expressions', () => {

@@ -1,8 +1,40 @@
-import { assertMapAstNode, execParseExpression } from './util'
+import {
+  assertMapAstNode,
+  execParseExpression,
+  execParseSingleStatement,
+} from './util'
 import * as ast from '@bvetree/ast/src/map-v2'
 
 describe('MapV2Parser', () => {
-  describe('#parse_expressions', () => {
+  describe('#parse nullable expressions', () => {
+    it('parse empty expression', () => {
+      const node = execParseSingleStatement(
+        'Curve.SetGauge();'
+      ) as ast.MapFunctionNode
+
+      expect(node.arguments.length).toBe(1)
+      assertMapAstNode(node.arguments[0], ast.NodeType.Empty, 1, 15, 1, 15, '')
+    })
+
+    it('parse null expression', () => {
+      const node = execParseSingleStatement(
+        'Curve.SetGauge(null);'
+      ) as ast.MapFunctionNode
+
+      expect(node.arguments.length).toBe(1)
+      assertMapAstNode(
+        node.arguments[0],
+        ast.NodeType.Null,
+        1,
+        15,
+        1,
+        19,
+        'null'
+      )
+    })
+  })
+
+  describe('#parse expressions', () => {
     it('parens', () => {
       const parens = execParseExpression('(0);') as ast.ExpressionValueNode
       assertMapAstNode(parens, ast.NodeType.Parens, 1, 0, 1, 3, '(0)')

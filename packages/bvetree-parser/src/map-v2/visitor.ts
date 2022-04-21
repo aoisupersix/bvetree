@@ -146,11 +146,23 @@ export class Visitor
 
   visitNullableExpr(ctx: parser.NullableExprContext): NullableAstNode {
     if (ctx._nullSyntax !== undefined) {
-      return null
+      // null
+      return util.createMapAstNode<ast.MapAstNode>(
+        ast.NodeType.Null,
+        ctx,
+        this.charStream,
+        {}
+      )
     }
     const exprCtx = ctx.expr()
     if (exprCtx === undefined) {
-      return null
+      // empty
+      return util.createMapAstNode<ast.MapAstNode>(
+        ast.NodeType.Empty,
+        ctx,
+        this.charStream,
+        {}
+      )
     }
 
     return this.visit(exprCtx)

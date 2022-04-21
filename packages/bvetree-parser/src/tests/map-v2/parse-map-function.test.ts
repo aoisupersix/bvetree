@@ -25,7 +25,7 @@ describe('MapV2Parser', () => {
       expect(value.value).toBe('1.0')
     })
 
-    it.skip('parse Gauge.Set(Value)', () => {
+    it('parse Gauge.Set(Value)', () => {
       const statement = execParseSingleStatement(
         `Gauge.Set(1.0);`
       ) as ast.MapFunctionNode
@@ -1046,7 +1046,7 @@ describe('MapV2Parser', () => {
       expect(cant.value).toBe('1.0')
     })
 
-    it.skip('parse Track[TrackKey].Cant(Cant)', () => {
+    it('parse Track[TrackKey].Cant(Cant)', () => {
       const statement = execParseSingleStatement(
         `Track['TrackKey'].Cant(1.0);`
       ) as ast.MapFunctionWithKeyNode
@@ -1786,7 +1786,7 @@ describe('MapV2Parser', () => {
       expect(v5.value).toBe('1.0')
     })
 
-    it.skip('parse Signal.Speedlimit(V)', () => {
+    it('parse Signal.Speedlimit(V)', () => {
       const statement = execParseSingleStatement(
         `Signal.Speedlimit(1.0,1.0,1.0,1.0,1.0);`
       ) as ast.MapFunctionNode
@@ -1802,8 +1802,27 @@ describe('MapV2Parser', () => {
       expect(statement.element).toBe('signal')
       expect(statement.function).toBe('speedlimit')
 
-      expect(statement.arguments.length).toBe(1)
-      // TODO: リストなので対応不可
+      expect(statement.arguments.length).toBe(5)
+
+      const v1 = statement.arguments[0] as ast.ValueNode
+      assertMapAstNode(v1, ast.NodeType.Number, 1, 18, 1, 21, '1.0')
+      expect(v1.value).toBe('1.0')
+
+      const v2 = statement.arguments[1] as ast.ValueNode
+      assertMapAstNode(v2, ast.NodeType.Number, 1, 22, 1, 25, '1.0')
+      expect(v2.value).toBe('1.0')
+
+      const v3 = statement.arguments[2] as ast.ValueNode
+      assertMapAstNode(v3, ast.NodeType.Number, 1, 26, 1, 29, '1.0')
+      expect(v3.value).toBe('1.0')
+
+      const v4 = statement.arguments[3] as ast.ValueNode
+      assertMapAstNode(v4, ast.NodeType.Number, 1, 30, 1, 33, '1.0')
+      expect(v4.value).toBe('1.0')
+
+      const v5 = statement.arguments[4] as ast.ValueNode
+      assertMapAstNode(v5, ast.NodeType.Number, 1, 34, 1, 37, '1.0')
+      expect(v5.value).toBe('1.0')
     })
 
     it('parse Speedlimit.Setsignal(V)', () => {
@@ -2971,7 +2990,7 @@ describe('MapV2Parser', () => {
       expect(speed.value).toBe('1.0')
     })
 
-    it.skip('parse Train[TrainKey].Settrack(TrackKey,Direction)', () => {
+    it('parse Train[TrainKey].Settrack(TrackKey,Direction)', () => {
       const statement = execParseSingleStatement(
         `Train['TrainKey'].Settrack('string_test_value',1.0);`
       ) as ast.MapFunctionWithKeyNode
@@ -3009,7 +3028,7 @@ describe('MapV2Parser', () => {
       expect(direction.value).toBe('1.0')
     })
 
-    it.skip('parse Legacy.Fog(Fogstart,Fogend,red,green,blue)', () => {
+    it('parse Legacy.Fog(Fogstart,Fogend,red,green,blue)', () => {
       const statement = execParseSingleStatement(
         `Legacy.Fog(1.0,1.0,1.0,1.0,1.0);`
       ) as ast.MapFunctionNode
@@ -3047,7 +3066,7 @@ describe('MapV2Parser', () => {
       expect(blue.value).toBe('1.0')
     })
 
-    it.skip('parse Legacy.Curve(radius,cant)', () => {
+    it('parse Legacy.Curve(radius,cant)', () => {
       const statement = execParseSingleStatement(
         `Legacy.Curve(1.0,1.0);`
       ) as ast.MapFunctionNode

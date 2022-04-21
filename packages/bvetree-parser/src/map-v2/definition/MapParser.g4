@@ -42,12 +42,13 @@ element :
 	| JOINTNOISE
 	| TRAIN
 	| LEGACY
+  | GAUGE
 	;
 
 subelement :
 	  X_ELEMENT
 	| Y_ELEMENT
-	| CANT_ELEMENT
+	| CANT
 	;
 
 function :
@@ -77,6 +78,11 @@ function :
 	| ADD
 	| ENABLE
 	| STOP
+  | CANT
+  | CURVE
+  | FOG
+  | SETTRACK
+  | SPEEDLIMIT
 	| PITCH
   | TURN
 	;

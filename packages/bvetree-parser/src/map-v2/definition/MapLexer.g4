@@ -32,7 +32,7 @@ LEGACY : L E G A C Y;
 
 X_ELEMENT : X;
 Y_ELEMENT : Y;
-CANT_ELEMENT : C A N T;
+CANT : C A N T;
 
 //関数名
 SET_GAUGE : S E T G A U G E;
@@ -65,6 +65,7 @@ ENABLE : E N A B L E;
 STOP : S T O P;
 
 //レガシー関数
+SETTRACK : S E T T R A C K;
 PITCH : P I T C H;
 TURN : T U R N;
 

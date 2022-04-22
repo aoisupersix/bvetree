@@ -4,7 +4,7 @@ import {
   RootNode,
   StatementNode,
 } from '@bvetree/ast/src/map-v2'
-import { MapV2Parser } from '@bvetree/parser/src/map-v2/map-v2-parser'
+import { parse } from '@bvetree/parser/src/map-v2/map-v2-parser'
 import {
   isDistanceStatementNode,
   isRootNode,
@@ -15,7 +15,7 @@ import {
  * @param input string to parse.
  */
 export const execParse = (input: string): RootNode | null => {
-  const ast = new MapV2Parser().parse(input)
+  const ast = parse(input)
   if (isRootNode(ast)) {
     return ast
   }

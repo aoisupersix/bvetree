@@ -1,17 +1,17 @@
-import { MapV2Parser } from '@bvetree/parser/src/map-v2/map-v2-parser'
+import { parse } from '@bvetree/parser/src/map-v2/map-v2-parser'
 import * as ast from '@bvetree/ast/src/map-v2'
 import { assertMapAstNode } from './util'
 
 describe('MapV2Parser', () => {
   describe('#parse', () => {
     it('parse empty string', () => {
-      const node = new MapV2Parser().parse('') as ast.RootNode
+      const node = parse('') as ast.RootNode
       assertMapAstNode(node, ast.NodeType.Root, 1, 0, 1, 0, '')
       expect(node.statements.length).toBe(0)
     })
 
     it('the end position of a node also considers whitespace', () => {
-      const root = new MapV2Parser().parse('Curve. SetGauge();')
+      const root = parse('Curve. SetGauge();')
       assertMapAstNode(
         root,
         ast.NodeType.Root,
@@ -24,7 +24,7 @@ describe('MapV2Parser', () => {
     })
 
     it('parse number distance statement', () => {
-      const node = new MapV2Parser().parse('100;') as ast.RootNode
+      const node = parse('100;') as ast.RootNode
       assertMapAstNode(node, ast.NodeType.Root, 1, 0, 1, 4, '100;')
 
       expect(node.statements.length).toBe(1)

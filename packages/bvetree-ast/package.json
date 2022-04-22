@@ -3,6 +3,10 @@
   "version": "0.0.1",
   "description": "AST tree of BveTransim 5/6 file format",
   "main": "dist/index.js",
+  "files": [
+    "dist",
+    "!**/tests"
+  ],
   "scripts": {
     "build": "tsc",
     "lint": "eslint src"

@@ -1,26 +1,25 @@
-import { ANTLRErrorListener, RecognitionException, Token } from 'antlr4ts'
+import { Position } from 'packages/bvetree-ast/src/position'
+import { ErrorListener } from '../error-listener'
 
 /**
  * Parse error.
  */
 export interface ParseError {
-  line: number
-  charPositionInLine: number
-  msg: string
-  e?: RecognitionException
+  position: Position
+  message: string
+  ex?: Error
 }
 
 /**
  * Create a error listener that stores errors in array of specified parameter.
  */
 export const createDummyErrorListener = (errors: ParseError[]) => {
-  const errorListener: ANTLRErrorListener<Token> = {
-    syntaxError: (recognizer, token, line, charPositionInLine, msg, e) => {
+  const errorListener: ErrorListener = {
+    reportError: (position, message, ex) => {
       errors.push({
-        line: line,
-        charPositionInLine: charPositionInLine,
-        msg: msg,
-        e: e,
+        position: position,
+        message: message,
+        ex: ex,
       })
     },
   }

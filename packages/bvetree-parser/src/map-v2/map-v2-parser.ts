@@ -1,14 +1,11 @@
-import {
-  ANTLRErrorListener,
-  CharStreams,
-  CommonTokenStream,
-  ConsoleErrorListener,
-  Token,
-} from 'antlr4ts'
+import { CharStreams, CommonTokenStream } from 'antlr4ts'
 import { MapLexer } from './gen/MapLexer'
 import { MapParser } from './gen/MapParser'
 import { Visitor } from './visitor'
 import { MapAstNode } from '@bvetree/ast/src/map-v2'
+import { MapGrammarErrorStrategy } from './error-strategy'
+import { ErrorListener } from '../error-listener'
+import { ErrorListenerBridge } from '../error-listener-bridge'
 
 /**
  * Options specified for the parser.
@@ -17,14 +14,14 @@ interface ParseOptions {
   /**
    * Custom listeners to handle parser errors.
    */
-  errorListeners: ANTLRErrorListener<Token>[]
+  errorListeners: ErrorListener[]
 }
 
 /**
  * Default parse options.
  */
 const defaultParserOptions: ParseOptions = {
-  errorListeners: [new ConsoleErrorListener()],
+  errorListeners: [],
 }
 
 /**
@@ -43,11 +40,11 @@ export const parse = (
   const tokenStream = new CommonTokenStream(lexer)
 
   const parser = new MapParser(tokenStream)
-  parser.removeErrorListeners()
+  parser.errorHandler = new MapGrammarErrorStrategy()
+
   if (errorListeners.length > 0) {
-    errorListeners.forEach((errorListener) => {
-      parser.addErrorListener(errorListener)
-    })
+    parser.removeErrorListeners()
+    parser.addErrorListener(new ErrorListenerBridge(errorListeners))
   }
 
   const cst = parser.root()

@@ -45,7 +45,7 @@ export const parse = (
 
   if (errorListeners.length > 0) {
     parser.removeErrorListeners()
-    parser.addErrorListener(new ErrorListenerBridge(errorListeners))
+    parser.addErrorListener(new ErrorListenerBridge(errorListeners, charStream))
   }
 
   const cst = parser.root()

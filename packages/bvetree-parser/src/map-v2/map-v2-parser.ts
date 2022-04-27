@@ -28,7 +28,7 @@ const defaultParserOptions: ParseOptions = {
 /**
  * Parses the syntax string showing BveTrainSim 5/6 map file to AST.
  * @param input syntax string showing BveTrainSim 5/6 map file
- * @returns AST node of parse result
+ * @returns Parsing results and, if parsing is successful, AST node.
  */
 export const parse = (
   input: string,
@@ -42,6 +42,10 @@ export const parse = (
 
   const parser = new MapParser(tokenStream)
   parser.errorHandler = new MapGrammarErrorStrategy()
+
+  if (parser.numberOfSyntaxErrors > 0) {
+    return { success: false }
+  }
 
   if (errorListeners.length > 0) {
     parser.removeErrorListeners()

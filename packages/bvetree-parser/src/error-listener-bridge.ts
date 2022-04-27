@@ -8,7 +8,7 @@ import {
 } from 'antlr4ts'
 import { Position } from 'packages/bvetree-ast/src/position'
 import { ErrorListener } from './error-listener'
-import { getEndPosition } from './map-v2/util'
+import { getEndPosition, getOriginalTextOfContext } from './map-v2/util'
 
 /**
  * Bridge to convert ANTLRErrorListener to bvetree error listeners.
@@ -35,13 +35,15 @@ export class ErrorListenerBridge implements ANTLRErrorListener<Token> {
   ) {
     const start: Position = { line: line, charIndexInLine: charPositionInLine }
     let end: Position | undefined
+    let text: string | undefined
 
     const ctx = e?.context as ParserRuleContext | undefined
     if (ctx !== undefined) {
       end = getEndPosition(ctx, this.charStream)
+      text = getOriginalTextOfContext(ctx, this.charStream)
     }
     this.listeners.forEach((listener) => {
-      listener.reportError(start, msg, end, e)
+      listener.reportError(start, msg, end, text, e)
     })
   }
 }

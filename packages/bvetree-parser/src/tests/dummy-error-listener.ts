@@ -8,6 +8,7 @@ export interface ParseError {
   start: Position
   message: string
   end?: Position
+  text?: string
   e?: Error
 }
 
@@ -16,11 +17,12 @@ export interface ParseError {
  */
 export const createDummyErrorListener = (errors: ParseError[]) => {
   const errorListener: ErrorListener = {
-    reportError: (start, message, end, e) => {
+    reportError: (start, message, end, text, e) => {
       errors.push({
         start: start,
         message: message,
         end: end,
+        text: text,
         e: e,
       })
     },

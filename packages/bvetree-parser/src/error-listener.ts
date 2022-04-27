@@ -9,12 +9,14 @@ export interface ErrorListener {
    * @param start Start position of error.
    * @param message Error message,
    * @param end End position of error.
+   * @param text Original string of error syntax.
    * @param e Source error class.
    */
   reportError: (
     start: Position,
     message: string,
     end?: Position,
+    text?: string | undefined,
     e?: Error
   ) => void
 }

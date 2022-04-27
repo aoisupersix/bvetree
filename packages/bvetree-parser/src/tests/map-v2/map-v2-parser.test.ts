@@ -5,15 +5,19 @@ import { assertMapAstNode } from './util'
 describe('MapV2Parser', () => {
   describe('#parse', () => {
     it('parse empty string', () => {
-      const node = parse('') as ast.RootNode
+      const result = parse('')
+      expect(result.success).toBeTruthy()
+      const node = result.ast as ast.RootNode
       assertMapAstNode(node, ast.NodeType.Root, 1, 0, 1, 0, '')
       expect(node.statements.length).toBe(0)
     })
 
     it('the end position of a node also considers whitespace', () => {
-      const root = parse('Curve. SetGauge();')
+      const result = parse('Curve. SetGauge();')
+      expect(result.success).toBeTruthy()
+      const node = result.ast as ast.RootNode
       assertMapAstNode(
-        root,
+        node,
         ast.NodeType.Root,
         1,
         0,
@@ -24,7 +28,9 @@ describe('MapV2Parser', () => {
     })
 
     it('parse number distance statement', () => {
-      const node = parse('100;') as ast.RootNode
+      const result = parse('100;')
+      expect(result.success).toBeTruthy()
+      const node = result.ast as ast.RootNode
       assertMapAstNode(node, ast.NodeType.Root, 1, 0, 1, 4, '100;')
 
       expect(node.statements.length).toBe(1)

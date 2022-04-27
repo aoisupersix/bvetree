@@ -11,46 +11,44 @@ import {
 } from '@bvetree/parser/src/map-v2/util'
 
 /**
- * Execute MapV2Parser.parse() and return the return value as RootNode or null.
+ * Execute MapV2Parser.parse() and return the return value as RootNode.
+ * If failed to parse, test is failed.
  * @param input string to parse.
  */
-export const execParse = (input: string): RootNode | null => {
-  const ast = parse(input)
+export const execParse = (input: string): RootNode => {
+  const result = parse(input)
+  expect(result.success).toBeTruthy()
+  const ast = result.ast
   if (isRootNode(ast)) {
     return ast
   }
 
-  return null
+  throw new Error('Parse failed.')
 }
 
 /**
- * Execute MapV2Parser.parse() as single statement and return the return value as StatementNode or null.
- * Returns null if input contains multiple statements.
+ * Execute MapV2Parser.parse() as single statement and return the return value as StatementNode.
+ * If failed to parse or input contains multiple statements, test is failed.
  * @param input string to parse.
  */
-export const execParseSingleStatement = (
-  input: string
-): StatementNode | null => {
+export const execParseSingleStatement = (input: string): StatementNode => {
   const root = execParse(input)
-  if (root !== null && root.statements.length === 1) {
-    return root.statements[0]
-  }
-
-  return null
+  expect(root.statements.length).toBe(1)
+  return root.statements[0]
 }
 
 /**
- * Execute MapV2Parser.parse() as single distance statement and return the return value as DistanceStatementNode.value or null.
- * Returns null if input contains multiple statements.
+ * Execute MapV2Parser.parse() as single distance statement and return the return value as DistanceStatementNode.value.
+ * If failed to parse or input contains multiple statements, test is failed.
  * @param input string to parse.
  */
-export const execParseExpression = (input: string): MapAstNode | null => {
+export const execParseExpression = (input: string): MapAstNode => {
   const statement = execParseSingleStatement(input)
-  if (isDistanceStatementNode(statement)) {
-    return statement.value
+  if (!isDistanceStatementNode(statement)) {
+    throw new Error('Parse failed.')
   }
 
-  return null
+  return statement.value
 }
 
 /**
@@ -64,7 +62,7 @@ export const execParseExpression = (input: string): MapAstNode | null => {
  * @param text node text.
  */
 export const assertMapAstNode = (
-  node: MapAstNode | null,
+  node: MapAstNode | undefined,
   type: NodeType,
   startLine: number,
   startCharIndexInLine: number,
@@ -72,11 +70,10 @@ export const assertMapAstNode = (
   endCharIndexInLine: number,
   text: string
 ): void => {
-  if (node === null) {
+  if (node === undefined) {
     expect(node).toBeTruthy()
     return
   }
-
   expect(node.type).toBe(type)
   expect(node.start.line).toBe(startLine)
   expect(node.start.charIndexInLine).toBe(startCharIndexInLine)

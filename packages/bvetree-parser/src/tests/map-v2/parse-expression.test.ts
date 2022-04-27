@@ -242,7 +242,7 @@ describe('MapV2Parser', () => {
 
       expect(rand.arguments.length).toBe(1)
       const value = rand.arguments[0]
-      expect(value).toBeNull()
+      expect(value).toBeUndefined()
     })
 
     it('sin', () => {

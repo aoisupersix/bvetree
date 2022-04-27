@@ -1,10 +1,10 @@
 import { MapAstNode } from './map-ast-node'
 
 /**
- * Expression AST node allowing null.
+ * Expression AST node allowing undefined.
  * Used as argument type.
  */
-type NullableMapAstNode = MapAstNode | null
+type NullableMapAstNode = MapAstNode | undefined
 
 /**
  * Map AST node indicating a function that takes arguments.

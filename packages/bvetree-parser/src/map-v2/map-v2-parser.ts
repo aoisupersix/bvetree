@@ -33,7 +33,7 @@ const defaultParserOptions: ParseOptions = {
 export const parse = (
   input: string,
   options = {} as Partial<ParseOptions>
-): MapAstNode | null => {
+): { success: boolean; ast?: MapAstNode } => {
   const { errorListeners } = { ...defaultParserOptions, ...options }
 
   const charStream = CharStreams.fromString(input)
@@ -51,7 +51,7 @@ export const parse = (
   const cst = parser.root()
   try {
     const ast = new Visitor(charStream).visit(cst)
-    return ast
+    return { success: true, ast: ast }
   } catch (e) {
     if (e instanceof AstConversionError) {
       for (const listener of errorListeners) {

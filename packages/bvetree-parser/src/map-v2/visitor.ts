@@ -7,7 +7,7 @@ import * as ast from '@bvetree/ast/src/map-v2'
 import * as util from './util'
 import { AstConversionError } from '../error'
 
-type NullableAstNode = ast.MapAstNode | null
+type NullableAstNode = ast.MapAstNode | undefined
 
 export class Visitor
   extends AbstractParseTreeVisitor<NullableAstNode>
@@ -18,7 +18,7 @@ export class Visitor
   }
 
   protected defaultResult(): NullableAstNode {
-    return null
+    return undefined
   }
 
   visitRoot(ctx: parser.RootContext): NullableAstNode {
@@ -42,7 +42,7 @@ export class Visitor
     ctx: parser.DistanceStatementContext
   ): NullableAstNode {
     const value = this.visit(ctx.expr())
-    if (value === null) {
+    if (value === undefined) {
       throw new AstConversionError(
         ctx,
         this.charStream,
@@ -62,7 +62,7 @@ export class Visitor
     ctx: parser.VarAssignStatementContext
   ): NullableAstNode {
     const value = this.visit(ctx.expr())
-    if (value === null) {
+    if (value === undefined) {
       throw new AstConversionError(
         ctx,
         this.charStream,
@@ -98,7 +98,7 @@ export class Visitor
 
   visitKeyStatement(ctx: parser.KeyStatementContext): NullableAstNode {
     const key = this.visit(ctx.expr())
-    if (key === null) {
+    if (key === undefined) {
       throw new AstConversionError(
         ctx,
         this.charStream,
@@ -128,7 +128,7 @@ export class Visitor
     ctx: parser.KeyWithSubelementStatementContext
   ): NullableAstNode {
     const key = this.visit(ctx.expr())
-    if (key === null) {
+    if (key === undefined) {
       throw new AstConversionError(
         ctx,
         this.charStream,
@@ -183,7 +183,7 @@ export class Visitor
 
   visitParensExpr(ctx: parser.ParensExprContext): NullableAstNode {
     const inner = this.visit(ctx.expr())
-    if (inner === null) {
+    if (inner === undefined) {
       throw new AstConversionError(
         ctx,
         this.charStream,
@@ -201,7 +201,7 @@ export class Visitor
 
   visitUnaryExpr(ctx: parser.UnaryExprContext): NullableAstNode {
     const inner = this.visit(ctx.expr())
-    if (inner === null) {
+    if (inner === undefined) {
       throw new AstConversionError(
         ctx,
         this.charStream,
@@ -220,7 +220,7 @@ export class Visitor
   visitInfixExpr(ctx: parser.InfixExprContext): NullableAstNode {
     const left = this.visit(ctx._left)
     const right = this.visit(ctx._right)
-    if (left === null || right === null) {
+    if (left === undefined || right === undefined) {
       throw new AstConversionError(
         ctx,
         this.charStream,
@@ -228,7 +228,7 @@ export class Visitor
       )
     }
 
-    let type: ast.NodeType | null = null
+    let type: ast.NodeType | undefined
 
     switch (ctx._op.type) {
       case MapLexer.PLUS:
@@ -248,7 +248,7 @@ export class Visitor
         break
     }
 
-    if (type === null) {
+    if (type === undefined) {
       throw new AstConversionError(
         ctx,
         this.charStream,
@@ -266,7 +266,7 @@ export class Visitor
 
   visitAbsExpr(ctx: parser.AbsExprContext): NullableAstNode {
     const value = this.visit(ctx._value)
-    if (value === null) {
+    if (value === undefined) {
       throw new AstConversionError(
         ctx,
         this.charStream,
@@ -285,7 +285,7 @@ export class Visitor
   visitAtan2Expr(ctx: parser.Atan2ExprContext): NullableAstNode {
     const y = this.visit(ctx._y)
     const x = this.visit(ctx._x)
-    if (y === null || x === null) {
+    if (y === undefined || x === undefined) {
       throw new AstConversionError(
         ctx,
         this.charStream,
@@ -303,7 +303,7 @@ export class Visitor
 
   visitCeilExpr(ctx: parser.CeilExprContext): NullableAstNode {
     const value = this.visit(ctx._value)
-    if (value === null) {
+    if (value === undefined) {
       throw new AstConversionError(
         ctx,
         this.charStream,
@@ -321,7 +321,7 @@ export class Visitor
 
   visitCosExpr(ctx: parser.CosExprContext): NullableAstNode {
     const value = this.visit(ctx._value)
-    if (value === null) {
+    if (value === undefined) {
       throw new AstConversionError(
         ctx,
         this.charStream,
@@ -339,7 +339,7 @@ export class Visitor
 
   visitExpExpr(ctx: parser.ExpExprContext): NullableAstNode {
     const value = this.visit(ctx._value)
-    if (value === null) {
+    if (value === undefined) {
       throw new AstConversionError(
         ctx,
         this.charStream,
@@ -357,7 +357,7 @@ export class Visitor
 
   visitFloorExpr(ctx: parser.FloorExprContext): NullableAstNode {
     const value = this.visit(ctx._value)
-    if (value === null) {
+    if (value === undefined) {
       throw new AstConversionError(
         ctx,
         this.charStream,
@@ -375,7 +375,7 @@ export class Visitor
 
   visitLogExpr(ctx: parser.LogExprContext): NullableAstNode {
     const value = this.visit(ctx._value)
-    if (value === null) {
+    if (value === undefined) {
       throw new AstConversionError(
         ctx,
         this.charStream,
@@ -394,7 +394,7 @@ export class Visitor
   visitPowExpr(ctx: parser.PowExprContext): NullableAstNode {
     const x = this.visit(ctx._x)
     const y = this.visit(ctx._y)
-    if (x === null || y === null) {
+    if (x === undefined || y === undefined) {
       throw new AstConversionError(
         ctx,
         this.charStream,
@@ -411,10 +411,10 @@ export class Visitor
   }
 
   visitRandExpr(ctx: parser.RandExprContext): NullableAstNode {
-    let value: NullableAstNode = null
+    let value: NullableAstNode
     if (ctx._value) {
       value = this.visit(ctx._value)
-      if (value === null) {
+      if (value === undefined) {
         throw new AstConversionError(
           ctx,
           this.charStream,
@@ -433,7 +433,7 @@ export class Visitor
 
   visitSinExpr(ctx: parser.SinExprContext): NullableAstNode {
     const value = this.visit(ctx._value)
-    if (value === null) {
+    if (value === undefined) {
       throw new AstConversionError(
         ctx,
         this.charStream,
@@ -451,7 +451,7 @@ export class Visitor
 
   visitSqrtExpr(ctx: parser.SqrtExprContext): NullableAstNode {
     const value = this.visit(ctx._value)
-    if (value === null) {
+    if (value === undefined) {
       throw new AstConversionError(
         ctx,
         this.charStream,

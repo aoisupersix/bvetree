@@ -4,7 +4,7 @@ import {
   RootNode,
   StatementNode,
 } from '@bvetree/ast/src/map-v2'
-import { parse } from '@bvetree/parser/src/map-v2/map-v2-parser'
+import { parse } from '@bvetree/parser/src/map-v2'
 import {
   isDistanceStatementNode,
   isRootNode,

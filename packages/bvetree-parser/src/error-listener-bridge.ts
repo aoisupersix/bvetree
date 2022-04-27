@@ -6,7 +6,7 @@ import {
   Recognizer,
   Token,
 } from 'antlr4ts'
-import { Position } from 'packages/bvetree-ast/src/position'
+import { Position } from '@bvetree/ast'
 import { ErrorListener } from './error-listener'
 import { getEndPosition, getOriginalTextOfContext } from './map-v2/util'
 

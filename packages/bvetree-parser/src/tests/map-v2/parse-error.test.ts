@@ -1,5 +1,5 @@
-import { ErrorListener } from '../../error-listener'
-import { parse } from '../../map-v2/map-v2-parser'
+import { ErrorListener } from '../..'
+import { parse } from '../../map-v2'
 import { createDummyErrorListener, ParseError } from '../dummy-error-listener'
 
 describe('MapV2Parser', () => {

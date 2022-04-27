@@ -1,5 +1,5 @@
-import { Position } from 'packages/bvetree-ast/src/position'
-import { ErrorListener } from '../error-listener'
+import { Position } from '@bvetree/ast'
+import { ErrorListener } from '..'
 
 /**
  * Parse error.

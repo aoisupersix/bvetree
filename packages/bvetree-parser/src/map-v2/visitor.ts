@@ -5,6 +5,7 @@ import { MapParserVisitor } from './gen/MapParserVisitor'
 import { MapLexer } from './gen/MapLexer'
 import * as ast from '@bvetree/ast/src/map-v2'
 import * as util from './util'
+import { AstConversionError } from '../error'
 
 type NullableAstNode = ast.MapAstNode | null
 
@@ -42,7 +43,9 @@ export class Visitor
   ): NullableAstNode {
     const value = this.visit(ctx.expr())
     if (value === null) {
-      throw new Error(
+      throw new AstConversionError(
+        ctx,
+        this.charStream,
         'The expression in the distance statement is empty or invalid.'
       )
     }
@@ -60,7 +63,11 @@ export class Visitor
   ): NullableAstNode {
     const value = this.visit(ctx.expr())
     if (value === null) {
-      throw new Error('The expression in the var assign is empty or invalid.')
+      throw new AstConversionError(
+        ctx,
+        this.charStream,
+        'The expression in the var assign is empty or invalid.'
+      )
     }
 
     return util.createMapAstNode<ast.VarAssignStatementNode>(
@@ -92,7 +99,9 @@ export class Visitor
   visitKeyStatement(ctx: parser.KeyStatementContext): NullableAstNode {
     const key = this.visit(ctx.expr())
     if (key === null) {
-      throw new Error(
+      throw new AstConversionError(
+        ctx,
+        this.charStream,
         'The expression of map statement key is empty or invalid.'
       )
     }
@@ -120,7 +129,9 @@ export class Visitor
   ): NullableAstNode {
     const key = this.visit(ctx.expr())
     if (key === null) {
-      throw new Error(
+      throw new AstConversionError(
+        ctx,
+        this.charStream,
         'The expression of map statement key is empty or invalid.'
       )
     }
@@ -173,7 +184,9 @@ export class Visitor
   visitParensExpr(ctx: parser.ParensExprContext): NullableAstNode {
     const inner = this.visit(ctx.expr())
     if (inner === null) {
-      throw new Error(
+      throw new AstConversionError(
+        ctx,
+        this.charStream,
         'The expression in the parens operation is empty or invalid.'
       )
     }
@@ -189,7 +202,9 @@ export class Visitor
   visitUnaryExpr(ctx: parser.UnaryExprContext): NullableAstNode {
     const inner = this.visit(ctx.expr())
     if (inner === null) {
-      throw new Error(
+      throw new AstConversionError(
+        ctx,
+        this.charStream,
         'The expression in the unary operation is empty or invalid.'
       )
     }
@@ -206,7 +221,9 @@ export class Visitor
     const left = this.visit(ctx._left)
     const right = this.visit(ctx._right)
     if (left === null || right === null) {
-      throw new Error(
+      throw new AstConversionError(
+        ctx,
+        this.charStream,
         'Left or right expression in the infix expression is empty or invalid.'
       )
     }
@@ -232,7 +249,11 @@ export class Visitor
     }
 
     if (type === null) {
-      throw new Error(`invalid operand: ${ctx._op.text}`)
+      throw new AstConversionError(
+        ctx,
+        this.charStream,
+        `invalid operand: ${ctx._op.text}`
+      )
     }
 
     return util.createMapAstNode<ast.InfixExpressionNode>(
@@ -246,7 +267,11 @@ export class Visitor
   visitAbsExpr(ctx: parser.AbsExprContext): NullableAstNode {
     const value = this.visit(ctx._value)
     if (value === null) {
-      throw new Error('The expression in the function is empty or invalid.')
+      throw new AstConversionError(
+        ctx,
+        this.charStream,
+        'The expression in the function is empty or invalid.'
+      )
     }
 
     return util.createMapAstNode<ast.FunctionNode>(
@@ -261,7 +286,11 @@ export class Visitor
     const y = this.visit(ctx._y)
     const x = this.visit(ctx._x)
     if (y === null || x === null) {
-      throw new Error('The expression in the function is empty or invalid.')
+      throw new AstConversionError(
+        ctx,
+        this.charStream,
+        'The expression in the function is empty or invalid.'
+      )
     }
 
     return util.createMapAstNode<ast.FunctionNode>(
@@ -275,7 +304,11 @@ export class Visitor
   visitCeilExpr(ctx: parser.CeilExprContext): NullableAstNode {
     const value = this.visit(ctx._value)
     if (value === null) {
-      throw new Error('The expression in the function is empty or invalid.')
+      throw new AstConversionError(
+        ctx,
+        this.charStream,
+        'The expression in the function is empty or invalid.'
+      )
     }
 
     return util.createMapAstNode<ast.FunctionNode>(
@@ -289,7 +322,11 @@ export class Visitor
   visitCosExpr(ctx: parser.CosExprContext): NullableAstNode {
     const value = this.visit(ctx._value)
     if (value === null) {
-      throw new Error('The expression in the function is empty or invalid.')
+      throw new AstConversionError(
+        ctx,
+        this.charStream,
+        'The expression in the function is empty or invalid.'
+      )
     }
 
     return util.createMapAstNode<ast.FunctionNode>(
@@ -303,7 +340,11 @@ export class Visitor
   visitExpExpr(ctx: parser.ExpExprContext): NullableAstNode {
     const value = this.visit(ctx._value)
     if (value === null) {
-      throw new Error('The expression in the function is empty or invalid.')
+      throw new AstConversionError(
+        ctx,
+        this.charStream,
+        'The expression in the function is empty or invalid.'
+      )
     }
 
     return util.createMapAstNode<ast.FunctionNode>(
@@ -317,7 +358,11 @@ export class Visitor
   visitFloorExpr(ctx: parser.FloorExprContext): NullableAstNode {
     const value = this.visit(ctx._value)
     if (value === null) {
-      throw new Error('The expression in the function is empty or invalid.')
+      throw new AstConversionError(
+        ctx,
+        this.charStream,
+        'The expression in the function is empty or invalid.'
+      )
     }
 
     return util.createMapAstNode<ast.FunctionNode>(
@@ -331,7 +376,11 @@ export class Visitor
   visitLogExpr(ctx: parser.LogExprContext): NullableAstNode {
     const value = this.visit(ctx._value)
     if (value === null) {
-      throw new Error('The expression in the function is empty or invalid.')
+      throw new AstConversionError(
+        ctx,
+        this.charStream,
+        'The expression in the function is empty or invalid.'
+      )
     }
 
     return util.createMapAstNode<ast.FunctionNode>(
@@ -346,7 +395,11 @@ export class Visitor
     const x = this.visit(ctx._x)
     const y = this.visit(ctx._y)
     if (x === null || y === null) {
-      throw new Error('The expression in the function is empty or invalid.')
+      throw new AstConversionError(
+        ctx,
+        this.charStream,
+        'The expression in the function is empty or invalid.'
+      )
     }
 
     return util.createMapAstNode<ast.FunctionNode>(
@@ -362,7 +415,11 @@ export class Visitor
     if (ctx._value) {
       value = this.visit(ctx._value)
       if (value === null) {
-        throw new Error('The expression in the function is invalid.')
+        throw new AstConversionError(
+          ctx,
+          this.charStream,
+          'The expression in the function is empty or invalid.'
+        )
       }
     }
 
@@ -377,7 +434,11 @@ export class Visitor
   visitSinExpr(ctx: parser.SinExprContext): NullableAstNode {
     const value = this.visit(ctx._value)
     if (value === null) {
-      throw new Error('The expression in the function is empty or invalid.')
+      throw new AstConversionError(
+        ctx,
+        this.charStream,
+        'The expression in the function is empty or invalid.'
+      )
     }
 
     return util.createMapAstNode<ast.FunctionNode>(
@@ -391,7 +452,11 @@ export class Visitor
   visitSqrtExpr(ctx: parser.SqrtExprContext): NullableAstNode {
     const value = this.visit(ctx._value)
     if (value === null) {
-      throw new Error('The expression in the function is empty or invalid.')
+      throw new AstConversionError(
+        ctx,
+        this.charStream,
+        'The expression in the function is empty or invalid.'
+      )
     }
 
     return util.createMapAstNode<ast.FunctionNode>(

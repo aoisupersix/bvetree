@@ -6,6 +6,7 @@ import { MapAstNode } from '@bvetree/ast/src/map-v2'
 import { MapGrammarErrorStrategy } from './error-strategy'
 import { ErrorListener } from '../error-listener'
 import { ErrorListenerBridge } from '../error-listener-bridge'
+import { AstConversionError } from '../error'
 
 /**
  * Options specified for the parser.
@@ -48,7 +49,15 @@ export const parse = (
   }
 
   const cst = parser.root()
-  const ast = new Visitor(charStream).visit(cst)
-
-  return ast
+  try {
+    const ast = new Visitor(charStream).visit(cst)
+    return ast
+  } catch (e) {
+    if (e instanceof AstConversionError) {
+      for (const listener of errorListeners) {
+        listener.reportError(e.start, e.message, e)
+      }
+    }
+    throw e
+  }
 }

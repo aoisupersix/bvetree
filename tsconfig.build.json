@@ -1,4 +1,11 @@
 {
   "files": [],
-  "references": [{ "path": "packages/bvetree-ast" }, { "path": "packages/bvetree-parser" }]
+  "references": [
+    {
+      "path": "packages/bvetree-ast"
+    },
+    {
+      "path": "packages/bvetree-parser"
+    }
+  ]
 }

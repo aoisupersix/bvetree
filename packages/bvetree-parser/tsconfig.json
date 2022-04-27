@@ -4,5 +4,9 @@
     "rootDir": "src",
     "outDir": "dist"
   },
-  "references": [{ "path": "../bvetree-ast" }]
+  "references": [
+    {
+      "path": "../bvetree-ast"
+    }
+  ]
 }

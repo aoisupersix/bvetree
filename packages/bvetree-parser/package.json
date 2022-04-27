@@ -9,6 +9,7 @@
   ],
   "scripts": {
     "postinstall": "npm run gen-v2map",
+    "prepack": "npm run gen-v2map && npm run build",
     "build": "tsc",
     "dev": "ts-node src/index.ts",
     "lint": "eslint src",

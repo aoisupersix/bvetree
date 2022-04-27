@@ -55,7 +55,7 @@ export const parse = (
   } catch (e) {
     if (e instanceof AstConversionError) {
       for (const listener of errorListeners) {
-        listener.reportError(e.start, e.message, e)
+        listener.reportError(e.start, e.message, e.end, e)
       }
     }
     throw e

@@ -5,9 +5,10 @@ import { ErrorListener } from '../error-listener'
  * Parse error.
  */
 export interface ParseError {
-  position: Position
+  start: Position
   message: string
-  ex?: Error
+  end?: Position
+  e?: Error
 }
 
 /**
@@ -15,11 +16,12 @@ export interface ParseError {
  */
 export const createDummyErrorListener = (errors: ParseError[]) => {
   const errorListener: ErrorListener = {
-    reportError: (position, message, ex) => {
+    reportError: (start, message, end, e) => {
       errors.push({
-        position: position,
+        start: start,
         message: message,
-        ex: ex,
+        end: end,
+        e: e,
       })
     },
   }

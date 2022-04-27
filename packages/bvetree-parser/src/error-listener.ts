@@ -6,6 +6,15 @@ import { Position } from 'packages/bvetree-ast/src/position'
 export interface ErrorListener {
   /**
    * Called when an error occurs during parsing.
+   * @param start Start position of error.
+   * @param message Error message,
+   * @param end End position of error.
+   * @param e Source error class.
    */
-  reportError: (position: Position, message: string, ex?: Error) => void
+  reportError: (
+    start: Position,
+    message: string,
+    end?: Position,
+    e?: Error
+  ) => void
 }

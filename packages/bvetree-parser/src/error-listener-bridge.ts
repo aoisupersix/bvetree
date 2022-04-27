@@ -29,6 +29,7 @@ export class ErrorListenerBridge implements ANTLRErrorListener<Token> {
       listener.reportError(
         { line: line, charIndexInLine: charPositionInLine },
         msg,
+        undefined,
         e
       )
     })

@@ -30,7 +30,7 @@ export class AstConversionError extends BaseError {
    * End position of error node.
    * The last position of the node + 1 is returned.
    */
-  private readonly end: Position
+  public readonly end: Position
 
   /**
    * The original string of error node.

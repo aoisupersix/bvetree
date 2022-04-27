@@ -18,8 +18,8 @@ describe('MapV2Parser', () => {
       })
 
       expect(errors.length).toBe(1)
-      expect(errors[0].position.line).toBe(1)
-      expect(errors[0].position.charIndexInLine).toBe(6)
+      expect(errors[0].start.line).toBe(1)
+      expect(errors[0].start.charIndexInLine).toBe(6)
       expect(errors[0].message).toBe(
         `Input string 'Invalid' did not match expected map syntax '{CURVE, SPEEDLIMIT, FOG, CANT, SET_GAUGE, GAUGE, SET_CENTER, SET_FUNCTION, SET, BEGIN_TRANSITION, BEGIN, BEGIN0, BEGIN_CIRCULAR, BEGIN_CONST, BEGIN_NEW, END, INTERPOLATE, CHANGE, POSITION, LOAD, PUT, PUT0, PUTBETWEEN, SET_SPEEDLIMIT, SET_SIGNAL, PASS, AMBIENT, DIFFUSE, DIRECTION, PLAY, ADD, ENABLE, STOP, SETTRACK, PITCH, TURN}'.`
       )
@@ -31,8 +31,8 @@ describe('MapV2Parser', () => {
       })
 
       expect(errors.length).toBe(1)
-      expect(errors[0].position.line).toBe(1)
-      expect(errors[0].position.charIndexInLine).toBe(5)
+      expect(errors[0].start.line).toBe(1)
+      expect(errors[0].start.charIndexInLine).toBe(5)
       expect(errors[0].message).toBe(
         `Input string ';' could not be identified as map syntax.`
       )
@@ -44,8 +44,8 @@ describe('MapV2Parser', () => {
       })
 
       expect(errors.length).toBe(1)
-      expect(errors[0].position.line).toBe(1)
-      expect(errors[0].position.charIndexInLine).toBe(0)
+      expect(errors[0].start.line).toBe(1)
+      expect(errors[0].start.charIndexInLine).toBe(0)
       expect(errors[0].message).toBe(
         `Input string 'InvalidSyntax' did not match expected map syntax.`
       )

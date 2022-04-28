@@ -3,10 +3,12 @@
   "version": "0.1.0",
   "description": "Transforms BveTransim 5/6 file format to AST",
   "scripts": {
-    "build": "tsc -b tsconfig.build.json",
-    "lint": "eslint packages/*/src/**/*.ts",
+    "build": "npm run gen-mapparser-v2 && tsc",
+    "prepack": "npm run build",
+    "gen-mapparser-v2": "antlr4ts -Xexact-output-dir -o src/map-parser-v2/gen -visitor src/map-parser-v2/definition/MapParser.g4 src/map-parser-v2/definition/MapLexer.g4",
+    "lint": "eslint src/**/*.ts",
     "test": "jest",
-    "update-version": "npm version --git-tag-version false --workspaces --include-workspace-root"
+    "update-version": "npm version --git-tag-version false"
   },
   "repository": {
     "type": "git",
@@ -31,7 +33,7 @@
     "ts-jest": "27.1.4",
     "ts-node": "10.7.0"
   },
-  "workspaces": [
-    "packages/*"
-  ]
+  "dependencies": {
+    "antlr4ts": "^0.5.0-alpha.4"
+  }
 }

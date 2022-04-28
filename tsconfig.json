@@ -1,13 +1,22 @@
 {
   "compilerOptions": {
-    "target": "ES6",
+    "target": "ES2015",
     "module": "commonjs",
+    "rootDir": "src",
+    "outDir": "dist",
     "declaration": true,
     "sourceMap": true,
-    "composite": true,
     "strict": true,
     "strictPropertyInitialization": false,
     "baseUrl": "./",
+    "paths": {
+      "@/*": [
+        "src/*"
+      ],
+      "@": [
+        "src"
+      ]
+    },
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true

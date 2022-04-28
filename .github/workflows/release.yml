@@ -72,15 +72,12 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Generate ANTLR codes
-        run: npm run gen-v2map -w @bvetree/parser
-
       - name: Build
         run: npm run build
 
       - name: Publish
         run: |
-          npx can-npm-publish --verbose && npm publish --workspaces || echo "Does not publish"
+          npx can-npm-publish --verbose && npm publish || echo "Does not publish"
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
 

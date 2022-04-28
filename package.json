@@ -14,6 +14,11 @@
     "type": "git",
     "url": "git+https://github.com/aoisupersix/bvetree.git"
   },
+  "keywords": [
+    "bve5",
+    "bve6",
+    "parser"
+  ],
   "author": "aoisupersix",
   "license": "MIT",
   "bugs": {

@@ -1,5 +1,5 @@
 import { CharStream, ParserRuleContext } from 'antlr4ts'
-import { Position } from '@bvetree/ast'
+import { Position } from '@bvetree/ast/src/index'
 import {
   getEndPosition,
   getOriginalTextOfContext,

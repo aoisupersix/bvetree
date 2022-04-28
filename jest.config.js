@@ -4,14 +4,24 @@ const config = {
   testEnvironment: 'node',
   collectCoverage: true,
   collectCoverageFrom: [
-    '**/src/**/*.ts',
+    'packages/*/src/**/*.ts',
     '!**/tests/**',
     '!**/node_modules/**',
   ],
-  transform: {
-    '^.+\\.ts$': 'ts-jest',
-  },
-  testMatch: ['**/tests/**/*.test.ts'],
+  projects: [
+    {
+      testMatch: ['<rootDir>/packages/bvetree-parser/src/tests/**/*.test.ts'],
+      displayName: { name: '@bvetree/parser', color: 'blue' },
+      transform: {
+        '^.+\\.ts$': 'ts-jest',
+      },
+      globals: {
+        'ts-jest': {
+          tsconfig: '<rootDir>/packages/bvetree-parser/tsconfig.json',
+        },
+      },
+    },
+  ],
 }
 
 module.exports = config

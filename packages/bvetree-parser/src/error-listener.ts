@@ -1,4 +1,4 @@
-import { Position } from '@bvetree/ast'
+import { Position } from '@bvetree/ast/src/index'
 
 /**
  * Error listener to handle parser errors.

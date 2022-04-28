@@ -1,4 +1,4 @@
-import { Position } from '@bvetree/ast'
+import { Position } from '@bvetree/ast/src/index'
 import { CharStream, ParserRuleContext, Token } from 'antlr4ts'
 import { Interval } from 'antlr4ts/misc/Interval'
 import * as ast from '@bvetree/ast/src/map-v2'

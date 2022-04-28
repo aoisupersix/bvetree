@@ -1,4 +1,4 @@
-import { Position } from '@bvetree/ast'
+import { Position } from '@bvetree/ast/src/index'
 import { ErrorListener } from '..'
 
 /**

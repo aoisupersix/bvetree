@@ -104,16 +104,12 @@ jobs:
         with:
           node-version: 16.x
 
-      - name: Set change log
-        uses: scottbrenner/generate-changelog-action@master
-        id: change-log
-
       - name: Create a GitHub release
-        uses: actions/create-release@v1
+        uses: softprops/action-gh-release@v1
         if: needs.setup.outputs.is-pre-verion != 'true'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
+          generate_release_notes: true
           tag_name: ${{ needs.setup.outputs.tag-name }}
           release_name: Release ${{ needs.setup.outputs.tag-name }}
-          body: ${{ steps.change-log.outputs.changelog }}

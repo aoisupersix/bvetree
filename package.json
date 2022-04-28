@@ -10,6 +10,12 @@
     "test": "jest",
     "update-version": "npm version --git-tag-version false"
   },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "!**/tests"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/aoisupersix/bvetree.git"

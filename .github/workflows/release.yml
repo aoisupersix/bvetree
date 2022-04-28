@@ -1,0 +1,119 @@
+name: Release
+
+on:
+  push:
+    branches: [master]
+  workflow_run:
+    workflows: [ci]
+    types: [completed]
+    branches: [master]
+
+jobs:
+  setup:
+    name: Setup publish
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.package-version.outputs.version }}
+      tag-name: v${{ steps.package-version.outputs.version }}
+      is-pre-verion: ${{ steps.pre-version.outputs.pre-version }}
+      tag-exist: ${{ steps.check-tag.outputs.exists }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+
+      - name: Set package version
+        id: package-version
+        run: node -p -e '`::set-output name=version::${require("./package.json").version}`'
+
+      - name: Check pre-release
+        id: pre-version
+        run: node -p -e '`::set-output name=pre-version::${require("./package.json").version.includes("-")}`'
+
+      - name: Check tag exists
+        uses: mukunku/tag-exists-action@v1.0.0
+        id: check-tag
+        with:
+          tag: 'v${{ steps.package-version.outputs.version }}'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  publish:
+    name: Publish package
+    needs: setup
+    if: needs.setup.outputs.tag-exist != 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Cache node modules
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-modules-
+            ${{ runner.os }}-node-
+            ${{ runner.os }}-
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build
+        run: npm run build
+
+      - name: Publish
+        run: |
+          npx can-npm-publish --verbose && npm publish --workspaces || echo "Does not publish"
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
+
+      - name: Add git tag
+        uses: pkgdeps/git-tag-action@v2
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_repo: ${{ github.repository }}
+          version: ${{ needs.setup.outputs.version }}
+          git_commit_sha: ${{ github.sha }}
+          git_tag_prefix: 'v'
+
+  release-note:
+    name: Generate release note
+    needs: [setup, publish]
+    if: needs.setup.outputs.tag-exist != 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+
+      - name: Set change log
+        uses: scottbrenner/generate-changelog-action@master
+        id: change-log
+
+      - name: Create a GitHub release
+        uses: actions/create-release@v1
+        if: needs.setup.outputs.is-pre-verion != 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ needs.setup.outputs.tag-name }}
+          release_name: Release ${{ needs.setup.outputs.tag-name }}
+          body: ${{ steps.change-log.outputs.changelog }}
